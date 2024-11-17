@@ -11,8 +11,8 @@ BISON_FILE = syntax.y
 LEX_FILE = lex.l
 
 # Generated files
-BISON_C = syntax.tab.c
-BISON_H = syntax.tab.h
+BISON_C = syntax.tab.cc
+BISON_H = syntax.tab.hh
 LEX_C = lex.yy.c
 OUTPUT = spl
 

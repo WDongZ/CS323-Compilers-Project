@@ -11,18 +11,19 @@ Node* root = nullptr;
 
 void yyerror(const std::string& s);
 %}
-%token<Node*> INVALID
-%token<Node*> TYPE 
-%token<Node*> STRUCT IF ELSE WHILE FOR RETURN INCLUDE
-%token<Node*> DOT SEMI COLON COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV
-%token<Node*> AND OR NOT
-%token<Node*> LP RP LB RB LC RC
-%token<Node*> ID
-%token<int> INTEGER
-%token<float> FLOAT
-%token<char> CHAR
-%token<Node*> SINGLE_LINE_COMMENT MULTI_LINE_COMMENT
-%type<Node*> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args Var
+%union {
+    Node* node;
+}
+%require "3.2"
+%token<node> INVALID
+%token<node> TYPE 
+%token<node> STRUCT IF ELSE WHILE FOR RETURN INCLUDE
+%token<node> DOT SEMI COLON COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV
+%token<node> AND OR NOT
+%token<node> LP RP LB RB LC RC
+%token<node> ID INTEGER FLOAT CHAR
+%token<node> SINGLE_LINE_COMMENT MULTI_LINE_COMMENT
+%type<node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args Var
 %left INVALID
 %right ASSIGN
 %left OR
