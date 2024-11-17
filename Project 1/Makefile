@@ -4,7 +4,7 @@
 BISON = bison
 FLEX = flex
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++17
 
 # Input files
 BISON_FILE = syntax.y
