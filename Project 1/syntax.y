@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include <iostream>
 #include <string>
-#define YYSTYPE Node*
+//#define YYSTYPE Node*
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
@@ -35,7 +35,7 @@ void yyerror(const std::string& s);
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode("Program", {$1,$2});root = $$;}
+Program : ExtDefList {  $$ = Node::makeNode("Program", {$1});root = $$;}
     ;
 ExtDefList :            { $$ = Node::makeNode("ExtDefList"); }
     | ExtDef ExtDefList { $$ = Node::makeNode("ExtDefList", {$1,$2}); }
@@ -109,8 +109,6 @@ Stmt : SEMI                                     { $$ = Node::makeNode("Stmt",{$1
     | IF LP Exp RP Stmt  %prec LOWER_ELSE       { $$ = Node::makeNode("Stmt",{$1,$2,$3,$4,$5}); }
     | IF LP Exp RP Stmt ELSE Stmt               { $$ = Node::makeNode("Stmt",{$1,$2,$3,$4,$5,$6,$7});  }
     | WHILE LP Exp RP Stmt                      { $$ = Node::makeNode("Stmt",{$1,$2,$3,$4,$5});}
-    | FOR LP DecList SEMI Exp SEMI Exp RP Stmt  %prec UPPER_FOR { $$ = Node::makeNode("Stmt",{$1,$2,$3,$4,$5,$6,$7,$8,$9});}
-    | FOR LP VarDec COLON Exp RP Stmt      %prec LOWER_FOR      { $$ = Node::makeNode("Stmt",{$1,$2,$3,$4,$5,$6,$7});}
     | Exp error                                 { $$ = Node::makeNode("Stmt"); has_error = 1;yyerror("Type B,Missing semicolon \';\'") ;}
     | RETURN Exp error                          { $$ = Node::makeNode("Stmt"); has_error = 1; yyerror("Type B,Missing semicolon \';\'") ; }
     | IF LP RP  %prec LOWER_ELSE                { $$ = Node::makeNode("Stmt"); has_error = 1; yyerror("Type B,Missing condition \';\'") ; }
