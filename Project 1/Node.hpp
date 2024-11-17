@@ -78,13 +78,13 @@ public:
     }
     // 构造函数
     Node(NodeType type, const std::string& text)
-        : type(type), value(text) {}
+        : value(text), type(type) {}
 
     Node(NodeType type, int intValue)
-        : type(type), value(intValue) {}
+        : value(intValue), type(type) {}
 
     Node(NodeType type, float floatValue)
-        : type(type), value(floatValue) {}
+        : value(floatValue), type(type) {}
     ~Node() {
         for (auto child : children) {
             delete child;
