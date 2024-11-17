@@ -37,7 +37,26 @@ enum NodeType {
     Lb,
     Rb,
     Lc,
-    Rc
+    Rc,
+    Program,
+    ExtDefList,
+    ExtDef,
+    ExtDecList,
+    Specifier,
+    StructSpecifier,
+    VarDec,
+    FunDec,
+    VarList,
+    ParamDec,
+    CompSt,
+    StmtList,
+    Stmt,
+    DefList,
+    Def,
+    DecList,
+    Dec,
+    Exp,
+    Args    
 };
 
 class Node {
@@ -59,13 +78,13 @@ public:
     }
     // 构造函数
     Node(NodeType type, const std::string& text)
-        : type(type), value(text) {}
+        : value(text), type(type) {}
 
     Node(NodeType type, int intValue)
-        : type(type), value(intValue) {}
+        : value(intValue), type(type) {}
 
     Node(NodeType type, float floatValue)
-        : type(type), value(floatValue) {}
+        : value(floatValue), type(type) {}
     ~Node() {
         for (auto child : children) {
             delete child;

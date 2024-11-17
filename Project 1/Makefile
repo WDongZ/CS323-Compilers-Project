@@ -4,15 +4,15 @@
 BISON = bison
 FLEX = flex
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++17
 
 # Input files
 BISON_FILE = syntax.y
 LEX_FILE = lex.l
 
 # Generated files
-BISON_C = syntax.tab.c
-BISON_H = syntax.tab.h
+BISON_C = syntax.tab.cc
+BISON_H = syntax.tab.hh
 LEX_C = lex.yy.c
 OUTPUT = spl
 
@@ -23,7 +23,7 @@ all: $(OUTPUT)
 bison: $(BISON_C) $(BISON_H)
 
 $(BISON_C) $(BISON_H): $(BISON_FILE)
-	$(BISON) -d $(BISON_FILE)
+	$(BISON) --language=c++ -d $(BISON_FILE)
 
 # Compile Flex files
 flex: $(LEX_C)
