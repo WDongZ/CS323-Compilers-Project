@@ -5,14 +5,7 @@
     #include "syntax.tab.hh"
     #define YYSTYPE Node*
     extern YYSTYPE yylval;
-    int yycolno = 1;
     int has_error = 0;
-    #define YY_USER_ACTION \
-    yylloc.first_line = yylineno; \
-    yylloc.first_column = yycolno; \
-    yylloc.last_line = yylineno; \
-    yylloc.last_column = yycolno + yyleng; \
-    yycolno += yyleng;
     using token = yy::parser::token;
 %}
 
@@ -69,12 +62,7 @@ ILLEGAL_TOKEN .+
 {MULTIPLE_COMMENT} {/* skip for comment */}
 
 [ \t\r]+ { /* skip whitespace */ }
-\n { yylineno++; yycolno = 1; }
 
 {INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID_NUMBER; }
 {ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::ILLEGAL_TOKEN; }
 %%
-
-int yywrap() {
-    return 1;
-}

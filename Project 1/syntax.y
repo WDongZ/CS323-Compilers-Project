@@ -11,6 +11,7 @@ Node* root = nullptr;
 
 void yyerror(const std::string& s);
 %}
+%locations
 %union {
     Node* node;
 }
