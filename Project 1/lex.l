@@ -69,7 +69,7 @@ ILLEGAL_TOKEN .+
 {MULTIPLE_COMMENT} {/* skip for comment */}
 
 [ \t\r]+ { /* skip whitespace */ }
-\n { curLine++; curCol = 1; }
+\n { yylineno++; yycolno = 1; }
 
 {INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID_NUMBER; }
 {ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return ILLEGAL_TOKEN; }
