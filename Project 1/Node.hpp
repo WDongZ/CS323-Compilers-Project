@@ -37,7 +37,26 @@ enum NodeType {
     Lb,
     Rb,
     Lc,
-    Rc
+    Rc,
+    Program,
+    ExtDefList,
+    ExtDef,
+    ExtDecList,
+    Specifier,
+    StructSpecifier,
+    VarDec,
+    FunDec,
+    VarList,
+    ParamDec,
+    CompSt,
+    StmtList,
+    Stmt,
+    DefList,
+    Def,
+    DecList,
+    Dec,
+    Exp,
+    Args    
 };
 
 class Node {
