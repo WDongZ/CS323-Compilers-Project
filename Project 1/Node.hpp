@@ -15,9 +15,7 @@ enum NodeType {
 
 class Node {
 private:
-    // 不知道这个text为什么在int和float的时候也会赋值，所以就不合并了
-    std::string text; 
-    std::variant<int, float> value;
+    std::variant<std::string, int, float> value;
 public:
     NodeType type;
     std::vector<Node *> children;
@@ -34,29 +32,21 @@ public:
     }
     // 构造函数
     Node(NodeType type, const std::string& text)
-        : type(type), text(text), value(0) {}
+        : type(type), value(text) {}
 
-    Node(NodeType type, const std::string& text, int intValue)
-        : type(type), text(text), value(intValue) {}
+    Node(NodeType type, int intValue)
+        : type(type), value(intValue) {}
 
-    Node(NodeType type, const std::string& text, float floatValue)
-        : type(type), text(text), value(floatValue) {}
+    Node(NodeType type, float floatValue)
+        : type(type), value(floatValue) {}
     ~Node() {
         for (auto child : children) {
             delete child;
         }
     }
     // getter and setter
-    const std::string& getText() const {
-        return text;
-    }
-
-    std::variant<int, float> getValue() const {
+    std::variant<std::string, int, float> getValue() const {
         return value;
-    }
-
-    void setText(const std::string& newText) {
-        text = newText;
     }
 
     void setValue(int intValue) {
@@ -65,11 +55,12 @@ public:
     void setValue(float floatValue) {
         value = floatValue;
     }
-
+    void setValue(const std::string& text) {
+        value = text;
+    }
     // cout
     friend std::ostream &operator<<(std::ostream &os, const Node &node) {
         os << "NodeType: " << node.type
-           << ", Text: " << node.text
            << ", Value: ";
 
         std::visit([&os](auto &&arg) {
