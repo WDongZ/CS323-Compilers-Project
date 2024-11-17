@@ -553,8 +553,9 @@ char *yytext;
     extern YYSTYPE yylval;
     int has_error = 0;
     using token = yy::parser::token;
-#line 556 "lex.yy.c"
+
 #line 557 "lex.yy.c"
+#line 558 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -771,9 +772,9 @@ YY_DECL
 		}
 
 	{
-#line 25 "lex.l"
+#line 26 "lex.l"
 
-#line 776 "lex.yy.c"
+#line 777 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -842,162 +843,162 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 26 "lex.l"
+#line 27 "lex.l"
 {yylval = new Node(NodeType::If, yytext); return token::IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "lex.l"
+#line 28 "lex.l"
 {yylval = new Node(NodeType::Else, yytext); return token::ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "lex.l"
+#line 29 "lex.l"
 {yylval = new Node(NodeType::While, yytext); return token::WHILE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "lex.l"
+#line 30 "lex.l"
 {yylval = new Node(NodeType::Return, yytext); return token::RETURN;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "lex.l"
+#line 31 "lex.l"
 {yylval = new Node(NodeType::Dot, yytext); return token::DOT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 31 "lex.l"
+#line 32 "lex.l"
 {yylval = new Node(NodeType::Semi, yytext); return token::SEMI;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 32 "lex.l"
+#line 33 "lex.l"
 {yylval = new Node(NodeType::Comma, yytext); return token::COMMA;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "lex.l"
+#line 34 "lex.l"
 {yylval = new Node(NodeType::Assign, yytext); return token::ASSIGN;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 34 "lex.l"
+#line 35 "lex.l"
 {yylval = new Node(NodeType::Lt, yytext); return token::LT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 35 "lex.l"
+#line 36 "lex.l"
 {yylval = new Node(NodeType::Le, yytext); return token::LE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "lex.l"
+#line 37 "lex.l"
 {yylval = new Node(NodeType::Gt, yytext); return token::GT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "lex.l"
+#line 38 "lex.l"
 {yylval = new Node(NodeType::Ge, yytext); return token::GE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "lex.l"
+#line 39 "lex.l"
 {yylval = new Node(NodeType::Ne, yytext); return token::NE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "lex.l"
+#line 40 "lex.l"
 {yylval = new Node(NodeType::Eq, yytext); return token::EQ;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "lex.l"
+#line 41 "lex.l"
 {yylval = new Node(NodeType::Plus, yytext); return token::PLUS;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "lex.l"
+#line 42 "lex.l"
 {yylval = new Node(NodeType::Minus, yytext); return token::MINUS;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 42 "lex.l"
+#line 43 "lex.l"
 {yylval = new Node(NodeType::Mul, yytext); return token::MUL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 43 "lex.l"
+#line 44 "lex.l"
 {yylval = new Node(NodeType::Div, yytext); return token::DIV;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "lex.l"
+#line 45 "lex.l"
 {yylval = new Node(NodeType::And, yytext); return token::AND;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "lex.l"
+#line 46 "lex.l"
 {yylval = new Node(NodeType::Or, yytext); return token::OR;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "lex.l"
+#line 47 "lex.l"
 {yylval = new Node(NodeType::Not, yytext); return token::NOT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "lex.l"
+#line 48 "lex.l"
 {yylval = new Node(NodeType::Lp, yytext); return token::LP;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "lex.l"
+#line 49 "lex.l"
 {yylval = new Node(NodeType::Rp, yytext); return token::RP;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "lex.l"
+#line 50 "lex.l"
 {yylval = new Node(NodeType::Lb, yytext); return token::LB;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "lex.l"
+#line 51 "lex.l"
 {yylval = new Node(NodeType::Rb, yytext); return token::RB;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "lex.l"
+#line 52 "lex.l"
 {yylval = new Node(NodeType::Lc, yytext); return token::LC;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "lex.l"
+#line 53 "lex.l"
 {yylval = new Node(NodeType::Rc, yytext); return token::RC;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 55 "lex.l"
+#line 56 "lex.l"
 {yylval = new Node(NodeType::Int, atoi(yytext)); return token::INTEGER;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "lex.l"
+#line 57 "lex.l"
 {yylval = new Node(NodeType::Float, strtof(yytext, nullptr)); return token::FLOAT;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 57 "lex.l"
+#line 58 "lex.l"
 {yylval = new Node(NodeType::Char, yytext); return token::CHAR;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 58 "lex.l"
+#line 59 "lex.l"
 {yylval = new Node(NodeType::Type, yytext); return token::TYPE;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 59 "lex.l"
+#line 60 "lex.l"
 {yylval = new Node(NodeType::Id, yytext); return token::ID;}
 	YY_BREAK
 case 33:
@@ -1005,36 +1006,36 @@ case 33:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 61 "lex.l"
+#line 62 "lex.l"
 {/* skip for comment */}
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 62 "lex.l"
+#line 63 "lex.l"
 {/* skip for comment */}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 64 "lex.l"
+#line 65 "lex.l"
 { /* skip whitespace */ }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 66 "lex.l"
-{ has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID_NUMBER; }
+#line 67 "lex.l"
+{ has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 67 "lex.l"
-{ has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::ILLEGAL_TOKEN; }
+#line 68 "lex.l"
+{ has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::INVALID; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 68 "lex.l"
+#line 69 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1037 "lex.yy.c"
+#line 1038 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2051,6 +2052,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 68 "lex.l"
+#line 69 "lex.l"
 
 

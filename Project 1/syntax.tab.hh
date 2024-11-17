@@ -196,7 +196,7 @@ namespace yy {
     /// Symbol semantic values.
     union value_type
     {
-#line 14 "syntax.y"
+#line 12 "syntax.y"
 
     Node* node;
 

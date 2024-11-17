@@ -7,6 +7,7 @@
     extern YYSTYPE yylval;
     int has_error = 0;
     using token = yy::parser::token;
+
 %}
 
 %option noyywrap
@@ -63,6 +64,6 @@ ILLEGAL_TOKEN .+
 
 [ \t\r]+ { /* skip whitespace */ }
 
-{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID_NUMBER; }
-{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::ILLEGAL_TOKEN; }
+{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID; }
+{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::INVALID; }
 %%
