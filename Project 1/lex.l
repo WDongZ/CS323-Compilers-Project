@@ -29,38 +29,37 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 ILLEGAL_TOKEN .+
 
 %%
-"struct" {return STRUCT;}
-"if" {return IF;}
-"else" {return ELSE;}
-"while" {return WHILE;}
-"return" {return RETURN;}
-"." {return DOT;}
-";" {return SEMI;}
-"," {return COMMA;}
-"=" {return ASSIGN;}
-"<" {return LT;}
-"<=" {return LE;}
-">" {return GT;}
-">=" {return GE;}
-"!=" {return NE;}
-"==" {return EQ;}
-"+" {return PLUS;}
-"-" {return MINUS;}
-"*" {return MUL;}
-"/" {return DIV;}
-"&&" {return AND;}
-"||" {return OR;}
-"!" {return NOT;}
-"(" {return LP;}
-")" {return RP;}
-"[" {return LB;}
-"]" {return RB;}
-"{" {return LC;}
-"}" {return RC;}
+"if" {yylval = new Node(If, yytext); return IF;}
+"else" {yylval = new Node(Else, yytext); return ELSE;}
+"while" {yylval = new Node(While, yytext); return WHILE;}
+"return" {yylval = new Node(Return, yytext); return RETURN;}
+"." {yylval = new Node(Dot, yytext); return DOT;}
+";" {yylval = new Node(Semi, yytext); return SEMI;}
+"," {yylval = new Node(Comma, yytext); return COMMA;}
+"=" {yylval = new Node(Assign, yytext); return ASSIGN;}
+"<" {yylval = new Node(Lt, yytext); return LT;}
+"<=" {yylval = new Node(Le, yytext); return LE;}
+">" {yylval = new Node(Gt, yytext); return GT;}
+">=" {yylval = new Node(Ge, yytext); return GE;}
+"!=" {yylval = new Node(Ne, yytext); return NE;}
+"==" {yylval = new Node(Eq, yytext); return EQ;}
+"+" {yylval = new Node(Plus, yytext); return PLUS;}
+"-" {yylval = new Node(Minus, yytext); return MINUS;}
+"*" {yylval = new Node(Mul, yytext); return MUL;}
+"/" {yylval = new Node(Div, yytext); return DIV;}
+"&&" {yylval = new Node(And, yytext); return AND;}
+"||" {yylval = new Node(Or, yytext); return OR;}
+"!" {yylval = new Node(Not, yytext); return NOT;}
+"(" {yylval = new Node(Lp, yytext); return LP;}
+")" {yylval = new Node(Rp, yytext); return RP;}
+"[" {yylval = new Node(Lb, yytext); return LB;}
+"]" {yylval = new Node(Rb, yytext); return RB;}
+"{" {yylval = new Node(Lc, yytext); return LC;}
+"}" {yylval = new Node(Rc, yytext); return RC;}
 
 
-{INTEGER} {yylval = new Node(Int, yytext, atoi(yytext)); return INTEGER;}
-{FLOAT} {yylval = new Node(Float, yytext, atof(yytext)); return FLOAT;}
+{INTEGER} {yylval = new Node(Int, atoi(yytext)); return INTEGER;}
+{FLOAT} {yylval = new Node(Float, atof(yytext)); return FLOAT;}
 {CHARACTER} {yylval = new Node(Char, yytext); return CHAR;}
 {ID} {yylval = new Node(Id, yytext); return ID;}
 {TYPE} {yylval = new Node(Type, yytext); return TYPE;}
