@@ -70,8 +70,8 @@ ILLEGAL_TOKEN .+
 [ \t\r]+ { /* skip whitespace */ }
 \n { curLine++; curCol = 1; }
 
-{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID_NUMBER; }
-{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::ILLEGAL_TOKEN; }
+{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID; }
+{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::INVALID; }
 %%
 
 int yywrap() {
