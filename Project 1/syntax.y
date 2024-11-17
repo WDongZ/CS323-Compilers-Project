@@ -1,5 +1,4 @@
 %{
-#define YYSTYPE Node*
 #include<stdio.h>
 #include "lex.yy.c"
 #include <iostream>
@@ -8,18 +7,18 @@
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
-Node* root = NULL;
+Node* root = nullptr;
 
 void yyerror(const std::string& s);
 %}
-%token INVALID
-%token TYPE 
-%token STRUCT IF ELSE WHILE FOR RETURN INCLUDE
-%token DOT SEMI COLON COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV
-%token AND OR NOT
-%token LP RP LB RB LC RC
-%token ID INTEGER FLOAT CHAR
-%token SINGLE_LINE_COMMENT MULTI_LINE_COMMENT
+%token<Node*> INVALID
+%token<Node*> TYPE 
+%token<Node*> STRUCT IF ELSE WHILE FOR RETURN INCLUDE
+%token<Node*> DOT SEMI COLON COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV
+%token<Node*> AND OR NOT
+%token<Node*> LP RP LB RB LC RC
+%token<Node*> ID INTEGER FLOAT CHAR
+%token<Node*> SINGLE_LINE_COMMENT MULTI_LINE_COMMENT
 
 %left INVALID
 %right ASSIGN
@@ -39,7 +38,7 @@ void yyerror(const std::string& s);
 /* high-level definition */
 Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1});root = $$;}
     ;
-ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList); }
+ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList);}
     | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}); }
     ;
 
@@ -249,6 +248,7 @@ Var : INTEGER          { $$ = $1; }
 %%
 
 void yyerror(const std::string& s) {
+    has_error = 1;
     std::cerr << "Error: " << s << std::endl;
 }
 

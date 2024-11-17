@@ -23,7 +23,7 @@ all: $(OUTPUT)
 bison: $(BISON_C) $(BISON_H)
 
 $(BISON_C) $(BISON_H): $(BISON_FILE)
-	$(BISON) -d $(BISON_FILE)
+	$(BISON) --language=c++ -d $(BISON_FILE)
 
 # Compile Flex files
 flex: $(LEX_C)
