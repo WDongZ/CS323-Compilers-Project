@@ -205,8 +205,9 @@ Var : INTEGER          { $$ = $1;}
 %%
 
 void yyerror(const std::string& s) {
-
-    std::cerr << "Error: "<<s << std::endl;
+    if (s != "syntax error") {
+        std::cerr << "Error: "<<s << std::endl;
+    }
 }
 
 int main() {
