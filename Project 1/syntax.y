@@ -4,11 +4,9 @@
 #include <iostream>
 #include <string>
 #include "Node.hpp"
-extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
 Node* root = nullptr;
-
 void yyerror(const std::string& s);
 %}
 %union {

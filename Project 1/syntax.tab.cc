@@ -44,14 +44,12 @@
 #include <iostream>
 #include <string>
 #include "Node.hpp"
-extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
 Node* root = nullptr;
-
 void yyerror(const std::string& s);
 
-#line 55 "syntax.tab.cc"
+#line 53 "syntax.tab.cc"
 
 
 #include "syntax.tab.hh"
@@ -129,7 +127,7 @@ void yyerror(const std::string& s);
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 133 "syntax.tab.cc"
+#line 131 "syntax.tab.cc"
 
   /// Build a parser object.
   parser::parser ()
@@ -583,697 +581,697 @@ namespace yy {
           switch (yyn)
             {
   case 2: // Program: ExtDefList
-#line 42 "syntax.y"
-                     {  (yylhs.value.Node*) = Node::makeNode(NodeType::Program, {(yystack_[0].value.Node*)});root = (yylhs.value.Node*);}
-#line 589 "syntax.tab.cc"
+#line 41 "syntax.y"
+                     {  (yylhs.value.node) = Node::makeNode(NodeType::Program, {(yystack_[0].value.node)});root = (yylhs.value.node);}
+#line 587 "syntax.tab.cc"
     break;
 
   case 3: // ExtDefList: %empty
-#line 44 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDefList);}
-#line 595 "syntax.tab.cc"
+#line 43 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::ExtDefList);}
+#line 593 "syntax.tab.cc"
     break;
 
   case 4: // ExtDefList: ExtDef ExtDefList
-#line 45 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDefList,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 601 "syntax.tab.cc"
+#line 44 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::ExtDefList,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 599 "syntax.tab.cc"
     break;
 
   case 5: // ExtDef: Specifier ExtDecList SEMI
-#line 48 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 607 "syntax.tab.cc"
+#line 47 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 605 "syntax.tab.cc"
     break;
 
   case 6: // ExtDef: Specifier SEMI
-#line 49 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 613 "syntax.tab.cc"
+#line 48 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 611 "syntax.tab.cc"
     break;
 
   case 7: // ExtDef: Specifier FunDec CompSt
-#line 50 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 619 "syntax.tab.cc"
+#line 49 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 617 "syntax.tab.cc"
     break;
 
   case 8: // ExtDef: Specifier ExtDecList error
-#line 51 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef); yyerror("Type B,Missing semicolon \';\'") ;}
-#line 625 "syntax.tab.cc"
+#line 50 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef); yyerror("Type B,Missing semicolon \';\'") ;}
+#line 623 "syntax.tab.cc"
     break;
 
   case 9: // ExtDef: Specifier error
-#line 52 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef);   yyerror("Type B,Missing semicolon \';\'"); }
-#line 631 "syntax.tab.cc"
+#line 51 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef);   yyerror("Type B,Missing semicolon \';\'"); }
+#line 629 "syntax.tab.cc"
     break;
 
   case 10: // ExtDef: ExtDecList SEMI
-#line 53 "syntax.y"
-                              { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDef);  yyerror("Type B,Missing specifier \';\'"); }
-#line 637 "syntax.tab.cc"
+#line 52 "syntax.y"
+                              { (yylhs.value.node) = Node::makeNode(NodeType::ExtDef);  yyerror("Type B,Missing specifier \';\'"); }
+#line 635 "syntax.tab.cc"
     break;
 
   case 11: // ExtDecList: VarDec
-#line 56 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDecList,{(yystack_[0].value.Node*)}); }
-#line 643 "syntax.tab.cc"
+#line 55 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::ExtDecList,{(yystack_[0].value.node)}); }
+#line 641 "syntax.tab.cc"
     break;
 
   case 12: // ExtDecList: VarDec COMMA ExtDecList
-#line 57 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::ExtDecList,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 649 "syntax.tab.cc"
+#line 56 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::ExtDecList,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 647 "syntax.tab.cc"
     break;
 
   case 13: // Specifier: TYPE
-#line 61 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Specifier,{(yystack_[0].value.Node*)}); }
-#line 655 "syntax.tab.cc"
+#line 60 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Specifier,{(yystack_[0].value.node)}); }
+#line 653 "syntax.tab.cc"
     break;
 
   case 14: // Specifier: StructSpecifier
-#line 62 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Specifier,{(yystack_[0].value.Node*)}); }
-#line 661 "syntax.tab.cc"
+#line 61 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Specifier,{(yystack_[0].value.node)}); }
+#line 659 "syntax.tab.cc"
     break;
 
   case 15: // StructSpecifier: STRUCT ID LC DefList RC
-#line 65 "syntax.y"
-                                            { (yylhs.value.Node*) = Node::makeNode(NodeType::StructSpecifier,{(yystack_[4].value.Node*),(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 667 "syntax.tab.cc"
+#line 64 "syntax.y"
+                                            { (yylhs.value.node) = Node::makeNode(NodeType::StructSpecifier,{(yystack_[4].value.node),(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 665 "syntax.tab.cc"
     break;
 
   case 16: // StructSpecifier: STRUCT ID
-#line 66 "syntax.y"
-                                            { (yylhs.value.Node*) = Node::makeNode(NodeType::StructSpecifier,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 673 "syntax.tab.cc"
+#line 65 "syntax.y"
+                                            { (yylhs.value.node) = Node::makeNode(NodeType::StructSpecifier,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 671 "syntax.tab.cc"
     break;
 
   case 17: // StructSpecifier: STRUCT ID LC DefList error
-#line 67 "syntax.y"
-                                            { (yylhs.value.Node*) = Node::makeNode(NodeType::StructSpecifier);  yyerror("Type B,Missing closing curly braces \'}\'") ;}
-#line 679 "syntax.tab.cc"
+#line 66 "syntax.y"
+                                            { (yylhs.value.node) = Node::makeNode(NodeType::StructSpecifier);  yyerror("Type B,Missing closing curly braces \'}\'") ;}
+#line 677 "syntax.tab.cc"
     break;
 
   case 18: // StructSpecifier: STRUCT ID DefList RC
-#line 68 "syntax.y"
-                                            { (yylhs.value.Node*) = Node::makeNode(NodeType::StructSpecifier);   yyerror("Type B,Missing closing curly braces \'{\'") ; }
-#line 685 "syntax.tab.cc"
+#line 67 "syntax.y"
+                                            { (yylhs.value.node) = Node::makeNode(NodeType::StructSpecifier);   yyerror("Type B,Missing closing curly braces \'{\'") ; }
+#line 683 "syntax.tab.cc"
     break;
 
   case 19: // VarDec: ID
-#line 72 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::VarDec,{(yystack_[0].value.Node*)}); }
-#line 691 "syntax.tab.cc"
+#line 71 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::VarDec,{(yystack_[0].value.node)}); }
+#line 689 "syntax.tab.cc"
     break;
 
   case 20: // VarDec: VarDec LB INTEGER RB
-#line 73 "syntax.y"
-                               { (yylhs.value.Node*) = Node::makeNode(NodeType::VarDec,{(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.int),(yystack_[0].value.Node*)}); }
-#line 697 "syntax.tab.cc"
+#line 72 "syntax.y"
+                               { (yylhs.value.node) = Node::makeNode(NodeType::VarDec,{(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 695 "syntax.tab.cc"
     break;
 
   case 21: // VarDec: VarDec LB INTEGER error
-#line 74 "syntax.y"
-                               { (yylhs.value.Node*) = Node::makeNode(NodeType::VarDec); yyerror("Type B,Missing closing braces \']\'");}
-#line 703 "syntax.tab.cc"
+#line 73 "syntax.y"
+                               { (yylhs.value.node) = Node::makeNode(NodeType::VarDec); yyerror("Type B,Missing closing braces \']\'");}
+#line 701 "syntax.tab.cc"
     break;
 
   case 22: // VarDec: VarDec INTEGER RB
-#line 75 "syntax.y"
-                               { (yylhs.value.Node*) = Node::makeNode(NodeType::VarDec);  yyerror("Type B,Missing closing braces \']\'");}
-#line 709 "syntax.tab.cc"
+#line 74 "syntax.y"
+                               { (yylhs.value.node) = Node::makeNode(NodeType::VarDec);  yyerror("Type B,Missing closing braces \']\'");}
+#line 707 "syntax.tab.cc"
     break;
 
   case 23: // VarDec: INVALID
-#line 76 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::VarDec);  }
-#line 715 "syntax.tab.cc"
+#line 75 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::VarDec);  }
+#line 713 "syntax.tab.cc"
     break;
 
   case 24: // FunDec: ID LP VarList RP
-#line 79 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec,{(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 721 "syntax.tab.cc"
+#line 78 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::FunDec,{(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 719 "syntax.tab.cc"
     break;
 
   case 25: // FunDec: ID LP RP
-#line 80 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 727 "syntax.tab.cc"
+#line 79 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::FunDec,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 725 "syntax.tab.cc"
     break;
 
   case 26: // FunDec: ID LP VarList error
-#line 81 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \')\'") ;}
-#line 733 "syntax.tab.cc"
+#line 80 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \')\'") ;}
+#line 731 "syntax.tab.cc"
     break;
 
   case 27: // FunDec: ID RP
-#line 82 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \'(\'") ;}
-#line 739 "syntax.tab.cc"
+#line 81 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \'(\'") ;}
+#line 737 "syntax.tab.cc"
     break;
 
   case 28: // FunDec: ID LP error
-#line 83 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \')\'"); }
-#line 745 "syntax.tab.cc"
+#line 82 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::FunDec); yyerror("Type B,Missing closing parenthesis \')\'"); }
+#line 743 "syntax.tab.cc"
     break;
 
   case 29: // FunDec: INVALID LP VarList RP
-#line 84 "syntax.y"
-                              { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec);  }
-#line 751 "syntax.tab.cc"
+#line 83 "syntax.y"
+                              { (yylhs.value.node) = Node::makeNode(NodeType::FunDec);  }
+#line 749 "syntax.tab.cc"
     break;
 
   case 30: // FunDec: INVALID LP RP
-#line 85 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec);  }
-#line 757 "syntax.tab.cc"
+#line 84 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::FunDec);  }
+#line 755 "syntax.tab.cc"
     break;
 
   case 31: // FunDec: INVALID LP VarList error
-#line 86 "syntax.y"
-                                 { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec);  }
-#line 763 "syntax.tab.cc"
+#line 85 "syntax.y"
+                                 { (yylhs.value.node) = Node::makeNode(NodeType::FunDec);  }
+#line 761 "syntax.tab.cc"
     break;
 
   case 32: // FunDec: INVALID RP
-#line 87 "syntax.y"
-                                 { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec);  }
-#line 769 "syntax.tab.cc"
+#line 86 "syntax.y"
+                                 { (yylhs.value.node) = Node::makeNode(NodeType::FunDec);  }
+#line 767 "syntax.tab.cc"
     break;
 
   case 33: // FunDec: INVALID LP error
-#line 88 "syntax.y"
-                                 { (yylhs.value.Node*) = Node::makeNode(NodeType::FunDec);  }
-#line 775 "syntax.tab.cc"
+#line 87 "syntax.y"
+                                 { (yylhs.value.node) = Node::makeNode(NodeType::FunDec);  }
+#line 773 "syntax.tab.cc"
     break;
 
   case 34: // VarList: ParamDec COMMA VarList
-#line 91 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::VarList,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 781 "syntax.tab.cc"
+#line 90 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::VarList,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 779 "syntax.tab.cc"
     break;
 
   case 35: // VarList: ParamDec
-#line 92 "syntax.y"
-                                    { (yylhs.value.Node*) = Node::makeNode(NodeType::VarList,{(yystack_[0].value.Node*)}); }
-#line 787 "syntax.tab.cc"
+#line 91 "syntax.y"
+                                    { (yylhs.value.node) = Node::makeNode(NodeType::VarList,{(yystack_[0].value.node)}); }
+#line 785 "syntax.tab.cc"
     break;
 
   case 36: // ParamDec: Specifier VarDec
-#line 95 "syntax.y"
-                            { (yylhs.value.Node*) = Node::makeNode(NodeType::ParamDec,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)});  }
-#line 793 "syntax.tab.cc"
+#line 94 "syntax.y"
+                            { (yylhs.value.node) = Node::makeNode(NodeType::ParamDec,{(yystack_[1].value.node),(yystack_[0].value.node)});  }
+#line 791 "syntax.tab.cc"
     break;
 
   case 37: // CompSt: LC DefList StmtList RC
-#line 99 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::CompSt,{(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 799 "syntax.tab.cc"
+#line 98 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::CompSt,{(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 797 "syntax.tab.cc"
     break;
 
   case 38: // CompSt: LC DefList StmtList error
-#line 100 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::CompSt); yyerror("Type B,Missing closing curly bracket \'}\'") ;}
-#line 805 "syntax.tab.cc"
+#line 99 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::CompSt); yyerror("Type B,Missing closing curly bracket \'}\'") ;}
+#line 803 "syntax.tab.cc"
     break;
 
   case 39: // StmtList: %empty
-#line 104 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::StmtList);  }
-#line 811 "syntax.tab.cc"
+#line 103 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::StmtList);  }
+#line 809 "syntax.tab.cc"
     break;
 
   case 40: // StmtList: Stmt StmtList
-#line 105 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::StmtList,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 817 "syntax.tab.cc"
+#line 104 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::StmtList,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 815 "syntax.tab.cc"
     break;
 
   case 41: // StmtList: Stmt Def DefList StmtList
-#line 106 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::StmtList); yyerror("Type B,Missing specifier") ;}
-#line 823 "syntax.tab.cc"
+#line 105 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::StmtList); yyerror("Type B,Missing specifier") ;}
+#line 821 "syntax.tab.cc"
     break;
 
   case 42: // Stmt: SEMI
-#line 109 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[0].value.Node*)}); }
-#line 829 "syntax.tab.cc"
+#line 108 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[0].value.node)}); }
+#line 827 "syntax.tab.cc"
     break;
 
   case 43: // Stmt: Exp SEMI
-#line 110 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 835 "syntax.tab.cc"
+#line 109 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 833 "syntax.tab.cc"
     break;
 
   case 44: // Stmt: CompSt
-#line 111 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[0].value.Node*)});}
-#line 841 "syntax.tab.cc"
+#line 110 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[0].value.node)});}
+#line 839 "syntax.tab.cc"
     break;
 
   case 45: // Stmt: RETURN Exp SEMI
-#line 112 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 847 "syntax.tab.cc"
+#line 111 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 845 "syntax.tab.cc"
     break;
 
   case 46: // Stmt: IF LP Exp RP Stmt
-#line 113 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[4].value.Node*),(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 853 "syntax.tab.cc"
+#line 112 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[4].value.node),(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 851 "syntax.tab.cc"
     break;
 
   case 47: // Stmt: IF LP Exp RP Stmt ELSE Stmt
-#line 114 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[6].value.Node*),(yystack_[5].value.Node*),(yystack_[4].value.Node*),(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});  }
-#line 859 "syntax.tab.cc"
+#line 113 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[6].value.node),(yystack_[5].value.node),(yystack_[4].value.node),(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});  }
+#line 857 "syntax.tab.cc"
     break;
 
   case 48: // Stmt: WHILE LP Exp RP Stmt
-#line 115 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt,{(yystack_[4].value.Node*),(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 865 "syntax.tab.cc"
+#line 114 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt,{(yystack_[4].value.node),(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 863 "syntax.tab.cc"
     break;
 
   case 49: // Stmt: Exp error
-#line 116 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt); yyerror("Type B,Missing semicolon \';\'") ;}
-#line 871 "syntax.tab.cc"
+#line 115 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt); yyerror("Type B,Missing semicolon \';\'") ;}
+#line 869 "syntax.tab.cc"
     break;
 
   case 50: // Stmt: RETURN Exp error
-#line 117 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing semicolon \';\'") ; }
-#line 877 "syntax.tab.cc"
+#line 116 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing semicolon \';\'") ; }
+#line 875 "syntax.tab.cc"
     break;
 
   case 51: // Stmt: IF LP RP
-#line 118 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing condition \';\'") ; }
-#line 883 "syntax.tab.cc"
+#line 117 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing condition \';\'") ; }
+#line 881 "syntax.tab.cc"
     break;
 
   case 52: // Stmt: IF LP RP ELSE
-#line 119 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing condition \';\'") ; }
-#line 889 "syntax.tab.cc"
+#line 118 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing condition \';\'") ; }
+#line 887 "syntax.tab.cc"
     break;
 
   case 53: // Stmt: IF LP Exp RP error
-#line 120 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expect Stmt after if") ; }
-#line 895 "syntax.tab.cc"
+#line 119 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expect Stmt after if") ; }
+#line 893 "syntax.tab.cc"
     break;
 
   case 54: // Stmt: IF LP Exp RP error ELSE Stmt
-#line 121 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expect Stmt after if") ;  }
-#line 901 "syntax.tab.cc"
+#line 120 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expect Stmt after if") ;  }
+#line 899 "syntax.tab.cc"
     break;
 
   case 55: // Stmt: IF error Exp RP Stmt
-#line 122 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'if\'") ; }
-#line 907 "syntax.tab.cc"
+#line 121 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'if\'") ; }
+#line 905 "syntax.tab.cc"
     break;
 
   case 56: // Stmt: IF error Exp RP Stmt ELSE Stmt
-#line 123 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'if\'") ; }
-#line 913 "syntax.tab.cc"
+#line 122 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'if\'") ; }
+#line 911 "syntax.tab.cc"
     break;
 
   case 57: // Stmt: IF LP Exp error Stmt
-#line 124 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ; }
-#line 919 "syntax.tab.cc"
+#line 123 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ; }
+#line 917 "syntax.tab.cc"
     break;
 
   case 58: // Stmt: IF LP Exp error Stmt ELSE Stmt
-#line 125 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ;  }
-#line 925 "syntax.tab.cc"
+#line 124 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ;  }
+#line 923 "syntax.tab.cc"
     break;
 
   case 59: // Stmt: WHILE error Exp RP Stmt
-#line 126 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'while\'") ; }
-#line 931 "syntax.tab.cc"
+#line 125 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Expected \'(\' after \'while\'") ; }
+#line 929 "syntax.tab.cc"
     break;
 
   case 60: // Stmt: WHILE LP Exp error Stmt
-#line 127 "syntax.y"
-                                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ; }
-#line 937 "syntax.tab.cc"
+#line 126 "syntax.y"
+                                                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt);  yyerror("Type B,Missing closing parenthesis \')\'") ; }
+#line 935 "syntax.tab.cc"
     break;
 
   case 61: // Stmt: ELSE Stmt
-#line 128 "syntax.y"
-                { (yylhs.value.Node*) = Node::makeNode(NodeType::Stmt); yyerror("Type B,Expected \'if\' before \'else\'"); }
-#line 943 "syntax.tab.cc"
+#line 127 "syntax.y"
+                { (yylhs.value.node) = Node::makeNode(NodeType::Stmt); yyerror("Type B,Expected \'if\' before \'else\'"); }
+#line 941 "syntax.tab.cc"
     break;
 
   case 62: // DefList: %empty
-#line 132 "syntax.y"
-                    { (yylhs.value.Node*) = Node::makeNode(NodeType::DefList); }
-#line 949 "syntax.tab.cc"
+#line 131 "syntax.y"
+                    { (yylhs.value.node) = Node::makeNode(NodeType::DefList); }
+#line 947 "syntax.tab.cc"
     break;
 
   case 63: // DefList: Def DefList
-#line 133 "syntax.y"
-                    { (yylhs.value.Node*) = Node::makeNode(NodeType::DefList,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 955 "syntax.tab.cc"
+#line 132 "syntax.y"
+                    { (yylhs.value.node) = Node::makeNode(NodeType::DefList,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 953 "syntax.tab.cc"
     break;
 
   case 64: // Def: Specifier DecList SEMI
-#line 136 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Def,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});  }
-#line 961 "syntax.tab.cc"
+#line 135 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::Def,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});  }
+#line 959 "syntax.tab.cc"
     break;
 
   case 65: // Def: Specifier DecList error
-#line 137 "syntax.y"
-                                { (yylhs.value.Node*) = Node::makeNode(NodeType::Def,{(yystack_[2].value.Node*),(yystack_[1].value.Node*)}); yyerror("Type B,Missing semicolon \';\'");}
-#line 967 "syntax.tab.cc"
+#line 136 "syntax.y"
+                                { (yylhs.value.node) = Node::makeNode(NodeType::Def,{(yystack_[2].value.node),(yystack_[1].value.node)}); yyerror("Type B,Missing semicolon \';\'");}
+#line 965 "syntax.tab.cc"
     break;
 
   case 66: // DecList: Dec
-#line 140 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::DecList,{(yystack_[0].value.Node*)}); }
-#line 973 "syntax.tab.cc"
+#line 139 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::DecList,{(yystack_[0].value.node)}); }
+#line 971 "syntax.tab.cc"
     break;
 
   case 67: // DecList: Dec COMMA DecList
-#line 141 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::DecList,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 979 "syntax.tab.cc"
+#line 140 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::DecList,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 977 "syntax.tab.cc"
     break;
 
   case 68: // Dec: VarDec
-#line 144 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Dec,{(yystack_[0].value.Node*)});}
-#line 985 "syntax.tab.cc"
+#line 143 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Dec,{(yystack_[0].value.node)});}
+#line 983 "syntax.tab.cc"
     break;
 
   case 69: // Dec: VarDec ASSIGN Exp
-#line 145 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Dec,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 991 "syntax.tab.cc"
+#line 144 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Dec,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 989 "syntax.tab.cc"
     break;
 
   case 70: // Exp: Exp ASSIGN Exp
-#line 149 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 997 "syntax.tab.cc"
+#line 148 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 995 "syntax.tab.cc"
     break;
 
   case 71: // Exp: Exp AND Exp
-#line 150 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1003 "syntax.tab.cc"
+#line 149 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1001 "syntax.tab.cc"
     break;
 
   case 72: // Exp: Exp OR Exp
-#line 151 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1009 "syntax.tab.cc"
+#line 150 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1007 "syntax.tab.cc"
     break;
 
   case 73: // Exp: Exp LT Exp
-#line 152 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1015 "syntax.tab.cc"
+#line 151 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1013 "syntax.tab.cc"
     break;
 
   case 74: // Exp: Exp LE Exp
-#line 153 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1021 "syntax.tab.cc"
+#line 152 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1019 "syntax.tab.cc"
     break;
 
   case 75: // Exp: Exp GT Exp
-#line 154 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1027 "syntax.tab.cc"
+#line 153 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1025 "syntax.tab.cc"
     break;
 
   case 76: // Exp: Exp GE Exp
-#line 155 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1033 "syntax.tab.cc"
+#line 154 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1031 "syntax.tab.cc"
     break;
 
   case 77: // Exp: Exp NE Exp
-#line 156 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1039 "syntax.tab.cc"
+#line 155 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1037 "syntax.tab.cc"
     break;
 
   case 78: // Exp: Exp EQ Exp
-#line 157 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1045 "syntax.tab.cc"
+#line 156 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1043 "syntax.tab.cc"
     break;
 
   case 79: // Exp: Exp PLUS Exp
-#line 158 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1051 "syntax.tab.cc"
+#line 157 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1049 "syntax.tab.cc"
     break;
 
   case 80: // Exp: Exp MINUS Exp
-#line 159 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1057 "syntax.tab.cc"
+#line 158 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1055 "syntax.tab.cc"
     break;
 
   case 81: // Exp: Exp MUL Exp
-#line 160 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1063 "syntax.tab.cc"
+#line 159 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1061 "syntax.tab.cc"
     break;
 
   case 82: // Exp: Exp DIV Exp
-#line 161 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1069 "syntax.tab.cc"
+#line 160 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1067 "syntax.tab.cc"
     break;
 
   case 83: // Exp: LP Exp RP
-#line 162 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1075 "syntax.tab.cc"
+#line 161 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1073 "syntax.tab.cc"
     break;
 
   case 84: // Exp: PLUS Exp
-#line 163 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1081 "syntax.tab.cc"
+#line 162 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1079 "syntax.tab.cc"
     break;
 
   case 85: // Exp: MINUS Exp
-#line 164 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1087 "syntax.tab.cc"
+#line 163 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1085 "syntax.tab.cc"
     break;
 
   case 86: // Exp: NOT Exp
-#line 165 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1093 "syntax.tab.cc"
+#line 164 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1091 "syntax.tab.cc"
     break;
 
   case 87: // Exp: ID LP Args RP
-#line 166 "syntax.y"
-                        {  (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1099 "syntax.tab.cc"
+#line 165 "syntax.y"
+                        {  (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1097 "syntax.tab.cc"
     break;
 
   case 88: // Exp: ID LP RP
-#line 167 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1105 "syntax.tab.cc"
+#line 166 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1103 "syntax.tab.cc"
     break;
 
   case 89: // Exp: Exp LB Exp RB
-#line 168 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[3].value.Node*),(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)});}
-#line 1111 "syntax.tab.cc"
+#line 167 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[3].value.node),(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)});}
+#line 1109 "syntax.tab.cc"
     break;
 
   case 90: // Exp: Exp DOT ID
-#line 169 "syntax.y"
-                        {(yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1117 "syntax.tab.cc"
+#line 168 "syntax.y"
+                        {(yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1115 "syntax.tab.cc"
     break;
 
   case 91: // Exp: Var
-#line 170 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp,{(yystack_[0].value.Node*)}); }
-#line 1123 "syntax.tab.cc"
+#line 169 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp,{(yystack_[0].value.node)}); }
+#line 1121 "syntax.tab.cc"
     break;
 
   case 92: // Exp: Exp ASSIGN error
-#line 171 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp); yyerror("Type B,Missing right operand");}
-#line 1129 "syntax.tab.cc"
+#line 170 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp); yyerror("Type B,Missing right operand");}
+#line 1127 "syntax.tab.cc"
     break;
 
   case 93: // Exp: Exp AND error
-#line 172 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand"); }
-#line 1135 "syntax.tab.cc"
+#line 171 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand"); }
+#line 1133 "syntax.tab.cc"
     break;
 
   case 94: // Exp: Exp OR error
-#line 173 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand"); }
-#line 1141 "syntax.tab.cc"
+#line 172 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand"); }
+#line 1139 "syntax.tab.cc"
     break;
 
   case 95: // Exp: Exp LT error
-#line 174 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1147 "syntax.tab.cc"
+#line 173 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1145 "syntax.tab.cc"
     break;
 
   case 96: // Exp: Exp LE error
-#line 175 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1153 "syntax.tab.cc"
+#line 174 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1151 "syntax.tab.cc"
     break;
 
   case 97: // Exp: Exp GT error
-#line 176 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1159 "syntax.tab.cc"
+#line 175 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1157 "syntax.tab.cc"
     break;
 
   case 98: // Exp: Exp GE error
-#line 177 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1165 "syntax.tab.cc"
+#line 176 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1163 "syntax.tab.cc"
     break;
 
   case 99: // Exp: Exp NE error
-#line 178 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1171 "syntax.tab.cc"
+#line 177 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1169 "syntax.tab.cc"
     break;
 
   case 100: // Exp: Exp EQ error
-#line 179 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1177 "syntax.tab.cc"
+#line 178 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1175 "syntax.tab.cc"
     break;
 
   case 101: // Exp: Exp PLUS error
-#line 180 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1183 "syntax.tab.cc"
+#line 179 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1181 "syntax.tab.cc"
     break;
 
   case 102: // Exp: Exp MINUS error
-#line 181 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1189 "syntax.tab.cc"
+#line 180 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1187 "syntax.tab.cc"
     break;
 
   case 103: // Exp: Exp MUL error
-#line 182 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1195 "syntax.tab.cc"
+#line 181 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1193 "syntax.tab.cc"
     break;
 
   case 104: // Exp: Exp DIV error
-#line 183 "syntax.y"
-                          { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-#line 1201 "syntax.tab.cc"
+#line 182 "syntax.y"
+                          { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
+#line 1199 "syntax.tab.cc"
     break;
 
   case 105: // Exp: Exp INVALID Exp
-#line 185 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  }
-#line 1207 "syntax.tab.cc"
+#line 184 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  }
+#line 1205 "syntax.tab.cc"
     break;
 
   case 106: // Exp: LP Exp error
-#line 187 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \')\'") ; }
-#line 1213 "syntax.tab.cc"
+#line 186 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \')\'") ; }
+#line 1211 "syntax.tab.cc"
     break;
 
   case 107: // Exp: ID LP Args error
-#line 191 "syntax.y"
-                        {(yylhs.value.Node*) = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
-#line 1219 "syntax.tab.cc"
+#line 190 "syntax.y"
+                        {(yylhs.value.node) = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
+#line 1217 "syntax.tab.cc"
     break;
 
   case 108: // Exp: ID LP error
-#line 193 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
-#line 1225 "syntax.tab.cc"
+#line 192 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
+#line 1223 "syntax.tab.cc"
     break;
 
   case 109: // Exp: Exp LB Exp error
-#line 195 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing closing braces \']\'") ; }
-#line 1231 "syntax.tab.cc"
+#line 194 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing closing braces \']\'") ; }
+#line 1229 "syntax.tab.cc"
     break;
 
   case 110: // Args: Exp COMMA Args
-#line 198 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Args,{(yystack_[2].value.Node*),(yystack_[1].value.Node*),(yystack_[0].value.Node*)}); }
-#line 1237 "syntax.tab.cc"
+#line 197 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Args,{(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node)}); }
+#line 1235 "syntax.tab.cc"
     break;
 
   case 111: // Args: Exp
-#line 199 "syntax.y"
-                        { (yylhs.value.Node*) = Node::makeNode(NodeType::Args,{(yystack_[0].value.Node*)}); }
-#line 1243 "syntax.tab.cc"
+#line 198 "syntax.y"
+                        { (yylhs.value.node) = Node::makeNode(NodeType::Args,{(yystack_[0].value.node)}); }
+#line 1241 "syntax.tab.cc"
     break;
 
   case 112: // Var: INTEGER
-#line 202 "syntax.y"
-                       { (yylhs.value.Node*) = (yystack_[0].value.int); }
-#line 1249 "syntax.tab.cc"
+#line 201 "syntax.y"
+                       { (yylhs.value.node) = (yystack_[0].value.node); }
+#line 1247 "syntax.tab.cc"
     break;
 
   case 113: // Var: ID
-#line 213 "syntax.y"
-                    { (yylhs.value.Node*) = (yystack_[0].value.Node*); }
-#line 1255 "syntax.tab.cc"
+#line 212 "syntax.y"
+                    { (yylhs.value.node) = (yystack_[0].value.node); }
+#line 1253 "syntax.tab.cc"
     break;
 
   case 114: // Var: FLOAT
-#line 224 "syntax.y"
-                    { (yylhs.value.Node*) = (yystack_[0].value.float); }
-#line 1261 "syntax.tab.cc"
+#line 223 "syntax.y"
+                    { (yylhs.value.node) = (yystack_[0].value.node); }
+#line 1259 "syntax.tab.cc"
     break;
 
   case 115: // Var: CHAR
-#line 235 "syntax.y"
-                    { (yylhs.value.Node*) = (yystack_[0].value.char); }
-#line 1267 "syntax.tab.cc"
+#line 234 "syntax.y"
+                    { (yylhs.value.node) = (yystack_[0].value.node); }
+#line 1265 "syntax.tab.cc"
     break;
 
   case 116: // Var: INVALID
-#line 246 "syntax.y"
-                    { (yylhs.value.Node*) = (yystack_[0].value.Node*); }
-#line 1273 "syntax.tab.cc"
+#line 245 "syntax.y"
+                    { (yylhs.value.node) = (yystack_[0].value.node); }
+#line 1271 "syntax.tab.cc"
     break;
 
 
-#line 1277 "syntax.tab.cc"
+#line 1275 "syntax.tab.cc"
 
             default:
               break;
@@ -1794,18 +1792,18 @@ namespace yy {
   const unsigned char
   parser::yyrline_[] =
   {
-       0,    42,    42,    44,    45,    48,    49,    50,    51,    52,
-      53,    56,    57,    61,    62,    65,    66,    67,    68,    72,
-      73,    74,    75,    76,    79,    80,    81,    82,    83,    84,
-      85,    86,    87,    88,    91,    92,    95,    99,   100,   104,
-     105,   106,   109,   110,   111,   112,   113,   114,   115,   116,
-     117,   118,   119,   120,   121,   122,   123,   124,   125,   126,
-     127,   128,   132,   133,   136,   137,   140,   141,   144,   145,
-     149,   150,   151,   152,   153,   154,   155,   156,   157,   158,
-     159,   160,   161,   162,   163,   164,   165,   166,   167,   168,
-     169,   170,   171,   172,   173,   174,   175,   176,   177,   178,
-     179,   180,   181,   182,   183,   185,   187,   191,   193,   195,
-     198,   199,   202,   213,   224,   235,   246
+       0,    41,    41,    43,    44,    47,    48,    49,    50,    51,
+      52,    55,    56,    60,    61,    64,    65,    66,    67,    71,
+      72,    73,    74,    75,    78,    79,    80,    81,    82,    83,
+      84,    85,    86,    87,    90,    91,    94,    98,    99,   103,
+     104,   105,   108,   109,   110,   111,   112,   113,   114,   115,
+     116,   117,   118,   119,   120,   121,   122,   123,   124,   125,
+     126,   127,   131,   132,   135,   136,   139,   140,   143,   144,
+     148,   149,   150,   151,   152,   153,   154,   155,   156,   157,
+     158,   159,   160,   161,   162,   163,   164,   165,   166,   167,
+     168,   169,   170,   171,   172,   173,   174,   175,   176,   177,
+     178,   179,   180,   181,   182,   184,   186,   190,   192,   194,
+     197,   198,   201,   212,   223,   234,   245
   };
 
   void
@@ -1887,9 +1885,9 @@ namespace yy {
   }
 
 } // yy
-#line 1891 "syntax.tab.cc"
+#line 1889 "syntax.tab.cc"
 
-#line 251 "syntax.y"
+#line 250 "syntax.y"
 
 
 void yyerror(const std::string& s) {
@@ -1897,10 +1895,10 @@ void yyerror(const std::string& s) {
     std::cerr << "Error: " << s << std::endl;
 }
 
-int main() {
-    yyin = stdin;
-    do {
-        yyparse();
-    } while (!feof(yyin));
-    return 0;
-}
+//int main() {
+//    yyin = stdin;
+//    do {
+//        yyparse();
+//    } while (!feof(yyin));
+//    return 0;
+//}

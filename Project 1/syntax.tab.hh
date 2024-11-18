@@ -194,7 +194,15 @@ namespace yy {
     typedef YYSTYPE value_type;
 #else
     /// Symbol semantic values.
+    union value_type
+    {
+#line 12 "syntax.y"
 
+    Node* node;
+
+#line 204 "syntax.tab.hh"
+
+    };
 #endif
     /// Backward compatibility (Bison 3.8).
     typedef value_type semantic_type;
@@ -839,7 +847,7 @@ namespace yy {
 
 
 } // yy
-#line 843 "syntax.tab.hh"
+#line 851 "syntax.tab.hh"
 
 
 
