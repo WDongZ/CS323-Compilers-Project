@@ -205,10 +205,6 @@ Var : INTEGER          { $$ = $1;}
 
 %%
 
-void yyerror1(const std::string& s,int lineno) {
-    
-    std::cerr << "Error: " <<"line: "<<lineno<<" "<<s << std::endl;
-}
 void yyerror(const std::string& s) {
     if (s != "syntax error") {
         std::cerr << "Error: "<<s << std::endl;
