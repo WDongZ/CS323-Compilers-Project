@@ -24,11 +24,11 @@
 %right <node_ptr> ASSIGN
 %left <node_ptr> OR
 %left <node_ptr> AND
-%left <node_ptr> LT LE GT GE NE EQ 
-%left <node_ptr> PLUS MINUS 
-%left <node_ptr> MUL DIV 
+%left <node_ptr> LT LE GT GE NE EQ
+%left <node_ptr> PLUS MINUS
+%left <node_ptr> MUL DIV
 %right <node_ptr> NOT
-%left <node_ptr> DOT LP RP LB RB 
+%left <node_ptr> DOT LP RP LB RB
 
 
 %token <node_ptr> SEMI LC RC
@@ -36,7 +36,7 @@
 
 
 %type <node_ptr> Program ExtDefList ExtDef ExtDecList
-%type <node_ptr> Specifier StructSpecifier 
+%type <node_ptr> Specifier StructSpecifier
 %type <node_ptr> VarDec FunDec VarList ParamDec CompSt StmtList
 %type <node_ptr> Stmt DefList Def DecList Dec Exp Args
 
@@ -109,7 +109,7 @@ Stmt: Exp SEMI {$$=new Node(NONTERMINAL, "Stmt", 2, @$.first_line, $1, $2);}
 
 DefList: {$$ = new Node(NONTERMINAL, "DefList", 0, @$.first_line);};
 | Def DefList {$$=new Node(NONTERMINAL, "DefList", 2, @$.first_line, $1, $2);}
-; 
+;
 
 Def: Specifier DecList SEMI {$$=new Node(NONTERMINAL, "Def", 3, @$.first_line, $1, $2, $3);}
 | Specifier DecList error{my_error(MISS_SEMI, @$.first_line); has_error=1;}
