@@ -1,5 +1,6 @@
 %{
 
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -42,157 +43,157 @@ int error=0;
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1});if(error==0) {root = $$;std::cout << *root << std::endl;} }
+Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {root = $$;std::cout << *root << std::endl;} }
     ;
-ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList);}
-    | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}); }
-    ;
-
-ExtDef : Specifier ExtDecList SEMI  { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2,$3});}
-    | Specifier SEMI                { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2}); }
-    | Specifier FunDec CompSt       { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2,$3}); }
-    | Specifier ExtDecList error    { $$ = Node::makeNode(NodeType::ExtDef);error=1 ;yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
-    | Specifier error               { $$ = Node::makeNode(NodeType::ExtDef); error=1; yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line)); }
-    | ExtDecList SEMI         { $$ = Node::makeNode(NodeType::ExtDef);error=1;   yyerror("Type B,Missing specifier \';\' at line " + std::to_string(@$.first_line)); }
+ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList, @$.first_line);}
+    | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}, @$.first_line); }
     ;
 
-ExtDecList : VarDec             { $$ = Node::makeNode(NodeType::ExtDecList,{$1}); }
-    | VarDec COMMA ExtDecList   { $$ = Node::makeNode(NodeType::ExtDecList,{$1,$2,$3}); }
+ExtDef : Specifier ExtDecList SEMI  { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2,$3}, @$.first_line);}
+    | Specifier SEMI                { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2}, @$.first_line); }
+    | Specifier FunDec CompSt       { $$ = Node::makeNode(NodeType::ExtDef,{$1,$2,$3}, @$.first_line); }
+    | Specifier ExtDecList error    { $$ = Node::makeNode(NodeType::ExtDef, @$.first_line);error=1 ;yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
+    | Specifier error               { $$ = Node::makeNode(NodeType::ExtDef, @$.first_line); error=1; yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line)); }
+    | ExtDecList SEMI         { $$ = Node::makeNode(NodeType::ExtDef, @$.first_line);error=1;   yyerror("Type B,Missing specifier \';\' at line " + std::to_string(@$.first_line)); }
+    ;
+
+ExtDecList : VarDec             { $$ = Node::makeNode(NodeType::ExtDecList,{$1}, @$.first_line); }
+    | VarDec COMMA ExtDecList   { $$ = Node::makeNode(NodeType::ExtDecList,{$1,$2,$3}, @$.first_line); }
     ;
 
 /* specifier */
-Specifier : TYPE        { $$ = Node::makeNode(NodeType::Specifier,{$1}); }
-    | StructSpecifier   { $$ = Node::makeNode(NodeType::Specifier,{$1}); }
+Specifier : TYPE        { $$ = Node::makeNode(NodeType::Specifier,{$1}, @$.first_line); }
+    | StructSpecifier   { $$ = Node::makeNode(NodeType::Specifier,{$1}, @$.first_line); }
     ;
 
-StructSpecifier : STRUCT ID LC DefList RC   { $$ = Node::makeNode(NodeType::StructSpecifier,{$1,$2,$3,$4,$5}); }
-    | STRUCT ID                             { $$ = Node::makeNode(NodeType::StructSpecifier,{$1,$2}); }
-    | STRUCT ID LC DefList error            { $$ = Node::makeNode(NodeType::StructSpecifier);error=1;   yyerror("Type B,Missing closing curly braces \'}\' at line " + std::to_string(@$.first_line));}
-    | STRUCT ID DefList RC                  { $$ = Node::makeNode(NodeType::StructSpecifier);  error=1;  yyerror("Type B,Missing closing curly braces \'{\' at line " + std::to_string(@$.first_line)); }
+StructSpecifier : STRUCT ID LC DefList RC   { $$ = Node::makeNode(NodeType::StructSpecifier,{$1,$2,$3,$4,$5}, @$.first_line); }
+    | STRUCT ID                             { $$ = Node::makeNode(NodeType::StructSpecifier,{$1,$2}, @$.first_line); }
+    | STRUCT ID LC DefList error            { $$ = Node::makeNode(NodeType::StructSpecifier, @$.first_line);error=1;   yyerror("Type B,Missing closing curly braces \'}\' at line " + std::to_string(@$.first_line));}
+    | STRUCT ID DefList RC                  { $$ = Node::makeNode(NodeType::StructSpecifier, @$.first_line);  error=1;  yyerror("Type B,Missing closing curly braces \'{\' at line " + std::to_string(@$.first_line)); }
     ;
 
 /* declarator */
-VarDec : ID                 { $$ = Node::makeNode(NodeType::VarDec,{$1}); }
-    | VarDec LB INTEGER RB     { $$ = Node::makeNode(NodeType::VarDec,{$1,$2,$3,$4}); }
-    | VarDec LB INTEGER error  { $$ = Node::makeNode(NodeType::VarDec);error=1;  yyerror("Type B,Missing closing braces \']\' at line " + std::to_string(@$.first_line));}
-    | VarDec INTEGER RB        { $$ = Node::makeNode(NodeType::VarDec); error=1;  yyerror("Type B,Missing closing braces \']\' at line " + std::to_string(@$.first_line));}
-    | INVALID               { $$ = Node::makeNode(NodeType::VarDec);  }
+VarDec : ID                 { $$ = Node::makeNode(NodeType::VarDec,{$1}, @$.first_line); }
+    | VarDec LB INTEGER RB     { $$ = Node::makeNode(NodeType::VarDec,{$1,$2,$3,$4}, @$.first_line); }
+    | VarDec LB INTEGER error  { $$ = Node::makeNode(NodeType::VarDec, @$.first_line);error=1;  yyerror("Type B,Missing closing braces \']\' at line " + std::to_string(@$.first_line));}
+    | VarDec INTEGER RB        { $$ = Node::makeNode(NodeType::VarDec, @$.first_line); error=1;  yyerror("Type B,Missing closing braces \']\' at line " + std::to_string(@$.first_line));}
+    | INVALID               { $$ = Node::makeNode(NodeType::VarDec, @$.first_line);  }
     ;
 
-FunDec : ID LP VarList RP   { $$ = Node::makeNode(NodeType::FunDec,{$1,$2,$3,$4});}
-    | ID LP RP              { $$ = Node::makeNode(NodeType::FunDec,{$1,$2,$3}); }
-    | ID LP VarList error   { $$ = Node::makeNode(NodeType::FunDec);error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));}
-    | ID RP                 { $$ = Node::makeNode(NodeType::FunDec); error=1; yyerror("Type B,Missing closing parenthesis \'(\' at line " + std::to_string(@$.first_line));}
-    | ID LP error           { $$ = Node::makeNode(NodeType::FunDec); error=1; yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
-    | INVALID LP VarList RP   { $$ = Node::makeNode(NodeType::FunDec);  }
-    | INVALID LP RP             { $$ = Node::makeNode(NodeType::FunDec);  }
-    | INVALID LP VarList error   { $$ = Node::makeNode(NodeType::FunDec);  }
-    | INVALID RP                 { $$ = Node::makeNode(NodeType::FunDec);  }
-    | INVALID LP error           { $$ = Node::makeNode(NodeType::FunDec);  }
+FunDec : ID LP VarList RP   { $$ = Node::makeNode(NodeType::FunDec,{$1,$2,$3,$4}, @$.first_line);}
+    | ID LP RP              { $$ = Node::makeNode(NodeType::FunDec,{$1,$2,$3}, @$.first_line); }
+    | ID LP VarList error   { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));}
+    | ID RP                 { $$ = Node::makeNode(NodeType::FunDec, @$.first_line); error=1; yyerror("Type B,Missing closing parenthesis \'(\' at line " + std::to_string(@$.first_line));}
+    | ID LP error           { $$ = Node::makeNode(NodeType::FunDec, @$.first_line); error=1; yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
+    | INVALID LP VarList RP   { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);  }
+    | INVALID LP RP             { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);  }
+    | INVALID LP VarList error   { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);  }
+    | INVALID RP                 { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);  }
+    | INVALID LP error           { $$ = Node::makeNode(NodeType::FunDec, @$.first_line);  }
     ;
 
-VarList : ParamDec COMMA VarList    { $$ = Node::makeNode(NodeType::VarList,{$1,$2,$3}); }
-    | ParamDec                      { $$ = Node::makeNode(NodeType::VarList,{$1}); }
+VarList : ParamDec COMMA VarList    { $$ = Node::makeNode(NodeType::VarList,{$1,$2,$3}, @$.first_line); }
+    | ParamDec                      { $$ = Node::makeNode(NodeType::VarList,{$1}, @$.first_line); }
     ;
 
-ParamDec : Specifier VarDec { $$ = Node::makeNode(NodeType::ParamDec,{$1,$2});  }
+ParamDec : Specifier VarDec { $$ = Node::makeNode(NodeType::ParamDec,{$1,$2}, @$.first_line);  }
     ;
 
 /* statement */
-CompSt : LC DefList StmtList RC { $$ = Node::makeNode(NodeType::CompSt,{$1,$2,$3,$4}); }
-    | LC DefList StmtList error { $$ = Node::makeNode(NodeType::CompSt);error=1;  yyerror("Type B,Missing closing curly bracket \'}\' at line " + std::to_string(@$.first_line));}
+CompSt : LC DefList StmtList RC { $$ = Node::makeNode(NodeType::CompSt,{$1,$2,$3,$4}, @$.first_line); }
+    | LC DefList StmtList error { $$ = Node::makeNode(NodeType::CompSt, @$.first_line);error=1;  yyerror("Type B,Missing closing curly bracket \'}\' at line " + std::to_string(@$.first_line));}
     ;
 
 
-StmtList :                      { $$ = Node::makeNode(NodeType::StmtList);  }
-    | Stmt StmtList             { $$ = Node::makeNode(NodeType::StmtList,{$1,$2}); }
-    | Stmt Def DefList StmtList { $$ = Node::makeNode(NodeType::StmtList); error=1; yyerror("Type B,Missing specifier at line " + std::to_string(@$.first_line));}
+StmtList :                      { $$ = Node::makeNode(NodeType::StmtList, @$.first_line);  }
+    | Stmt StmtList             { $$ = Node::makeNode(NodeType::StmtList,{$1,$2}, @$.first_line); }
+    | Stmt Def DefList StmtList { $$ = Node::makeNode(NodeType::StmtList, @$.first_line); error=1; yyerror("Type B,Missing specifier at line " + std::to_string(@$.first_line));}
     ;
 
-Stmt : SEMI                                     { $$ = Node::makeNode(NodeType::Stmt,{$1}); }
-    | Exp SEMI                                  { $$ = Node::makeNode(NodeType::Stmt,{$1,$2}); }
-    | CompSt                                    { $$ = Node::makeNode(NodeType::Stmt,{$1});}
-    | RETURN Exp SEMI                           { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3});}
-    | IF LP Exp RP Stmt  %prec LOWER_ELSE       { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5}); }
-    | IF LP Exp RP Stmt ELSE Stmt               { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5,$6,$7});  }
-    | WHILE LP Exp RP Stmt                      { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5});}
-    | Exp error                                 { $$ = Node::makeNode(NodeType::Stmt);error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
-    | RETURN Exp error                          { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line)); }
-    | IF LP RP  %prec LOWER_ELSE                { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing condition \';\' at line " + std::to_string(@$.first_line)); }
-    | IF LP RP ELSE                             { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing condition \';\' at line " + std::to_string(@$.first_line)); }
-    | IF LP Exp RP error  %prec LOWER_ELSE      { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Expect Stmt after if at line " + std::to_string(@$.first_line)); }
-    | IF LP Exp RP error ELSE Stmt              { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Expect Stmt after if at line " + std::to_string(@$.first_line));  }
-    | IF error Exp RP Stmt %prec LOWER_ELSE     { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Expected \'(\' after \'if\' at line " + std::to_string(@$.first_line)); }
-    | IF error Exp RP Stmt ELSE Stmt %prec ELSE { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Expected \'(\' after \'if\' at line " + std::to_string(@$.first_line)); }
-    | IF LP Exp error Stmt %prec LOWER_ELSE     { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
-    | IF LP Exp error Stmt ELSE Stmt %prec ELSE { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));  }
-    | WHILE error Exp RP Stmt                   { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Expected \'(\' after \'while\' at line " + std::to_string(@$.first_line)); }
-    | WHILE LP Exp error Stmt                   { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
-    | ELSE Stmt { $$ = Node::makeNode(NodeType::Stmt);error=1;  yyerror("Type B,Expected \'if\' before \'else\' at line " + std::to_string(@$.first_line)); }
+Stmt : SEMI                                     { $$ = Node::makeNode(NodeType::Stmt,{$1}, @$.first_line); }
+    | Exp SEMI                                  { $$ = Node::makeNode(NodeType::Stmt,{$1,$2}, @$.first_line); }
+    | CompSt                                    { $$ = Node::makeNode(NodeType::Stmt,{$1}, @$.first_line);}
+    | RETURN Exp SEMI                           { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3}, @$.first_line);}
+    | IF LP Exp RP Stmt  %prec LOWER_ELSE       { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5}, @$.first_line); }
+    | IF LP Exp RP Stmt ELSE Stmt               { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5,$6,$7}, @$.first_line);  }
+    | WHILE LP Exp RP Stmt                      { $$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5}, @$.first_line);}
+    | Exp error                                 { $$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
+    | RETURN Exp error                          { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line)); }
+    | IF LP RP  %prec LOWER_ELSE                { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing condition \';\' at line " + std::to_string(@$.first_line)); }
+    | IF LP RP ELSE                             { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing condition \';\' at line " + std::to_string(@$.first_line)); }
+    | IF LP Exp RP error  %prec LOWER_ELSE      { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expect Stmt after if at line " + std::to_string(@$.first_line)); }
+    | IF LP Exp RP error ELSE Stmt              { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expect Stmt after if at line " + std::to_string(@$.first_line));  }
+    | IF error Exp RP Stmt %prec LOWER_ELSE     { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expected \'(\' after \'if\' at line " + std::to_string(@$.first_line)); }
+    | IF error Exp RP Stmt ELSE Stmt %prec ELSE { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expected \'(\' after \'if\' at line " + std::to_string(@$.first_line)); }
+    | IF LP Exp error Stmt %prec LOWER_ELSE     { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
+    | IF LP Exp error Stmt ELSE Stmt %prec ELSE { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));  }
+    | WHILE error Exp RP Stmt                   { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expected \'(\' after \'while\' at line " + std::to_string(@$.first_line)); }
+    | WHILE LP Exp error Stmt                   { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
+    | ELSE Stmt { $$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Expected \'if\' before \'else\' at line " + std::to_string(@$.first_line)); }
     ;
 
 /* local definition */
-DefList :           { $$ = Node::makeNode(NodeType::DefList); }
-    | Def DefList   { $$ = Node::makeNode(NodeType::DefList,{$1,$2}); }
+DefList :           { $$ = Node::makeNode(NodeType::DefList, @$.first_line); }
+    | Def DefList   { $$ = Node::makeNode(NodeType::DefList,{$1,$2}, @$.first_line); }
     ;
 
-Def : Specifier DecList SEMI    { $$ = Node::makeNode(NodeType::Def,{$1,$2,$3});  }
-    | Specifier DecList error   { $$ = Node::makeNode(NodeType::Def,{$1,$2});error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
+Def : Specifier DecList SEMI    { $$ = Node::makeNode(NodeType::Def,{$1,$2,$3}, @$.first_line);  }
+    | Specifier DecList error   { $$ = Node::makeNode(NodeType::Def,{$1,$2}, @$.first_line);error=1;  yyerror("Type B,Missing semicolon \';\' at line " + std::to_string(@$.first_line));}
     ;
 
-DecList : Dec           { $$ = Node::makeNode(NodeType::DecList,{$1}); }
-    | Dec COMMA DecList { $$ = Node::makeNode(NodeType::DecList,{$1,$2,$3}); }
+DecList : Dec           { $$ = Node::makeNode(NodeType::DecList,{$1}, @$.first_line); }
+    | Dec COMMA DecList { $$ = Node::makeNode(NodeType::DecList,{$1,$2,$3}, @$.first_line); }
     ;
 
-Dec : VarDec            { $$ = Node::makeNode(NodeType::Dec,{$1});}
-    | VarDec ASSIGN Exp { $$ = Node::makeNode(NodeType::Dec,{$1,$2,$3}); }
+Dec : VarDec            { $$ = Node::makeNode(NodeType::Dec,{$1}, @$.first_line);}
+    | VarDec ASSIGN Exp { $$ = Node::makeNode(NodeType::Dec,{$1,$2,$3}, @$.first_line); }
     ;
 
 /* Expression */
-Exp : Exp ASSIGN Exp    { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp AND Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp OR Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3});}
-    | Exp LT Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp LE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp GT Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp GE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp NE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp EQ Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp PLUS Exp      { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp MINUS Exp     { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3});}
-    | Exp MUL Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3});}
-    | Exp DIV Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3});}
-    | LP Exp RP         { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | PLUS Exp          { $$ = Node::makeNode(NodeType::Exp,{$1,$2});}
-    | MINUS Exp         { $$ = Node::makeNode(NodeType::Exp,{$1,$2}); }
-    | NOT Exp           { $$ = Node::makeNode(NodeType::Exp,{$1,$2}); }
-    | ID LP Args RP     {  $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3,$4}); }
-    | ID LP RP          { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Exp LB Exp RB     { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3,$4});}
-    | Exp DOT ID        {$$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
-    | Var               { $$ = Node::makeNode(NodeType::Exp,{$1}); }
-    | Exp ASSIGN error    { $$ = Node::makeNode(NodeType::Exp); error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp AND error       { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line)); }
-    | Exp OR error        { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line)); }
-    | Exp LT error        { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp LE error        { $$ = Node::makeNode(NodeType::Exp);  error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp GT error        { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp GE error        { $$ = Node::makeNode(NodeType::Exp);  error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp NE error        { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp EQ error        { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp PLUS error      { $$ = Node::makeNode(NodeType::Exp);  error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp MINUS error     { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp MUL error       { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp DIV error       { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
-    | Exp INVALID Exp   { $$ = Node::makeNode(NodeType::Exp);  }
-    | LP Exp error      { $$ = Node::makeNode(NodeType::Exp);  error=1; yyerror("Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));}
-    | ID LP Args error  {$$ = Node::makeNode(NodeType::Exp);  error=1;  yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
-    | ID LP error       { $$ = Node::makeNode(NodeType::Exp); error=1;   yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
-    | Exp LB Exp error  { $$ = Node::makeNode(NodeType::Exp); error=1;  yyerror("Type B,Missing closing braces \']\'at line " + std::to_string(@$.first_line));}
+Exp : Exp ASSIGN Exp    { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp AND Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp OR Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line);}
+    | Exp LT Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp LE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp GT Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp GE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp NE Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp EQ Exp        { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp PLUS Exp      { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp MINUS Exp     { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line);}
+    | Exp MUL Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line);}
+    | Exp DIV Exp       { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line);}
+    | LP Exp RP         { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | PLUS Exp          { $$ = Node::makeNode(NodeType::Exp,{$1,$2}, @$.first_line);}
+    | MINUS Exp         { $$ = Node::makeNode(NodeType::Exp,{$1,$2}, @$.first_line); }
+    | NOT Exp           { $$ = Node::makeNode(NodeType::Exp,{$1,$2}, @$.first_line); }
+    | ID LP Args RP     {  $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3,$4}, @$.first_line); }
+    | ID LP RP          { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Exp LB Exp RB     { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3,$4}, @$.first_line);}
+    | Exp DOT ID        {$$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first_line); }
+    | Var               { $$ = Node::makeNode(NodeType::Exp,{$1}, @$.first_line); }
+    | Exp ASSIGN error    { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp AND error       { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line)); }
+    | Exp OR error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line)); }
+    | Exp LT error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp LE error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line);  error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp GT error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp GE error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp NE error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp EQ error        { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp PLUS error      { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1; yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp MINUS error     { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp MUL error       { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp DIV error       { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing right operand at line " + std::to_string(@$.first_line));}
+    | Exp INVALID Exp   { $$ = Node::makeNode(NodeType::Exp, @$.first_line); }
+    | LP Exp error      { $$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1; yyerror("Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line));}
+    | ID LP Args error  {$$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
+    | ID LP error       { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;   yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
+    | Exp LB Exp error  { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing closing braces \']\'at line " + std::to_string(@$.first_line));}
     ;
 
-Args : Exp COMMA Args   { $$ = Node::makeNode(NodeType::Args,{$1,$2,$3}); }
-    | Exp               { $$ = Node::makeNode(NodeType::Args,{$1}); }
+Args : Exp COMMA Args   { $$ = Node::makeNode(NodeType::Args,{$1,$2,$3}, @$.first_line);}
+    | Exp               { $$ = Node::makeNode(NodeType::Args,{$1}, @$.first_line);}
     ;
 
 Var : INTEGER          { $$ = $1;}
@@ -204,6 +205,10 @@ Var : INTEGER          { $$ = $1;}
 
 %%
 
+void yyerror1(const std::string& s,int lineno) {
+    
+    std::cerr << "Error: " <<"line: "<<lineno<<" "<<s << std::endl;
+}
 void yyerror(const std::string& s) {
     if (s != "syntax error") {
         std::cerr << "Error: "<<s << std::endl;
