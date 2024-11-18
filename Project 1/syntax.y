@@ -195,7 +195,7 @@ Args : Exp COMMA Args   { $$ = Node::makeNode(NodeType::Args,{$1,$2,$3}); }
     | Exp               { $$ = Node::makeNode(NodeType::Args,{$1}); }
     ;
 
-Var : INTEGER          { $$ = $1; }
+Var : INTEGER          { $$ = $1;std::cout<< yylloc.first_line-1<<std::endl; }
     | ID            { $$ = $1; }
     | FLOAT         { $$ = $1; }
     | CHAR          { $$ = $1; }
