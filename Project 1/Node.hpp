@@ -124,36 +124,36 @@ inline std::ostream &operator<<(std::ostream &os, NodeType type) {
 class Node {
 private:
     std::variant<std::string, int, float> value;
-    size_t linec = 0;
     void printTree(std::ostream& os, int depth) const {
-        os << std::string(depth * 4, ' ') << getText() << '\n';
+        os << std::string(depth * 4, ' ') << getText() << " (" << linec << ")"<< '\n';
         for (const auto& child : children) {
             child->printTree(os, depth + 1);
         }
     }
 public:
     NodeType type;
+    size_t linec = 0;
     std::vector<Node *> children;
     // factory method
-    static Node * makeNode(NodeType type){
-        return new Node(type, type_to_string(type));
+    static Node * makeNode(NodeType type, size_t linec){
+        return new Node(type, type_to_string(type), linec);
     }
-    static Node * makeNode(NodeType type, std::initializer_list<Node *> children){
-        Node * node = new Node(type, type_to_string(type));
+    static Node * makeNode(NodeType type, std::initializer_list<Node *> children, size_t linec){
+        Node * node = new Node(type, type_to_string(type), linec);
         for(auto child : children){
             node->children.push_back(child);
         }
         return node;
     }
     // 构造函数
-    Node(NodeType type, const std::string& text)
-        : value(text), type(type) {}
+    Node(NodeType type, const std::string& text, size_t linec)
+        : value(text), type(type), linec(linec) {}
 
-    Node(NodeType type, int intValue)
-        : value(intValue), type(type) {}
+    Node(NodeType type, int intValue, size_t linec)
+        : value(intValue), type(type), linec(linec) {}
 
-    Node(NodeType type, float floatValue)
-        : value(floatValue), type(type) {}
+    Node(NodeType type, float floatValue, size_t linec)
+        : value(floatValue), type(type), linec(linec) {}
     ~Node() {
         for (auto child : children) {
             delete child;
