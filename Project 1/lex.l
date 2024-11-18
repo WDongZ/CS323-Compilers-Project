@@ -17,14 +17,16 @@
 
 %option noyywrap
 %option yylineno
-
+TYPE "int"|"float"|"char"
+ID [a-zA-Z_][a-zA-Z0-9_]*
 INTEGER [0-9]+
 FLOAT [0-9]+\.[0-9]+
 CHARACTER ('.')|('\\x[0-9a-fA-F]{2}')
-TYPE "int"|"float"|"char"
-ID [a-zA-Z_][a-zA-Z0-9_]*
+INVALID_CHAR \'.*\'
+WRONG_ID ({INTEGER}{ID})|{INVALID_CHAR}
 COMMENT "//".*$
 MULTIPLE_COMMENT "/*"((("*"[^/])?)|[^*])*"*/"
+ILLEGAL_TOKEN [^\x20^\n^\x09]
 INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 
 %%
@@ -62,6 +64,8 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 {FLOAT} {yylval.node = new Node(NodeType::Float, strtof(yytext, nullptr)); return FLOAT;}
 {CHARACTER} {yylval.node = new Node(NodeType::Char, yytext); return CHAR;}
 {TYPE} {yylval.node = new Node(NodeType::Type, yytext); return TYPE;}
+{WRONG_ID} {has_error=1; fprintf(stdout,"Error type A at Line %d: unknown lexeme %s\n",
+               yylineno, yytext); return ID;}
 {ID} {yylval.node = new Node(NodeType::Id, yytext); return ID;}
 
 {COMMENT} {/* skip for comment */}
@@ -71,5 +75,5 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 \n { yycolno = 1; }
 
 {INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error Type A: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID; }
-. { has_error = 1; fprintf(stderr, "Error Type A: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
+{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error Type A: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
 %%
