@@ -19,7 +19,6 @@ ID [a-zA-Z_][a-zA-Z0-9_]*
 COMMENT "//".*$
 MULTIPLE_COMMENT "/*"((("*"[^/])?)|[^*])*"*/"
 INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
-ILLEGAL_TOKEN .+
 
 %%
 "if" {yylval.node = new Node(NodeType::If, yytext); return IF;}
@@ -62,4 +61,6 @@ ILLEGAL_TOKEN .+
 
 [ \t\r]+ { /* skip whitespace */ }
 
+{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error Type A: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID; }
+. { has_error = 1; fprintf(stderr, "Error Type A: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
 %%
