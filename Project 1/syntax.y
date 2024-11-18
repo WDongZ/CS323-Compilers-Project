@@ -180,17 +180,10 @@ Exp : Exp ASSIGN Exp    { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}); }
     | Exp MINUS error     { $$ = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
     | Exp MUL error       { $$ = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
     | Exp DIV error       { $$ = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing right operand");}
-    // | INVALID           { $$ = Node::makeNode(NodeType::Exp);  }
     | Exp INVALID Exp   { $$ = Node::makeNode(NodeType::Exp);  }
-    //| error Exp RP      { $$ = Node::makeNode(NodeType::Exp); yyerror("Missing closing parenthesis \'(\'") ;}
     | LP Exp error      { $$ = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \')\'") ; }
-    // | MINUS error Exp RP{ $$ = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \'(\'") ; }
-    // | MINUS LP Exp error{ $$ = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
-    // | ID error Args RP  { $$ = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \'(\'") ; }
     | ID LP Args error  {$$ = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
-    // | ID error RP       { $$ = Node::makeNode(NodeType::Exp);  yyerror("Missing closing parenthesis \'(\'") ; }
     | ID LP error       { $$ = Node::makeNode(NodeType::Exp);   yyerror("Missing closing parenthesis \')\'") ; }
-    // | Exp error Exp RB  { $$ = Node::makeNode(NodeType::Exp); yyerror("Type B,Missing closing braces \'[\'") ;}
     | Exp LB Exp error  { $$ = Node::makeNode(NodeType::Exp);  yyerror("Type B,Missing closing braces \']\'") ; }
     ;
 
