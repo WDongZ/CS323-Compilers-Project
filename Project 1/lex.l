@@ -4,7 +4,6 @@
     #include "Node.hpp"
     #include "syntax.tab.h"
     extern YYSTYPE yylval;
-    extern "C" int yylex();
     int has_error = 0;
     // using token = yy::parser::token;
 %}
@@ -63,6 +62,4 @@ ILLEGAL_TOKEN .+
 
 [ \t\r]+ { /* skip whitespace */ }
 
-{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID; }
-{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
 %%
