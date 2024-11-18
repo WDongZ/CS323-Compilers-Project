@@ -6,6 +6,13 @@
     extern YYSTYPE yylval;
     int has_error = 0;
     // using token = yy::parser::token;
+    int yycolno = 1;
+       #define YY_USER_ACTION \
+       yylloc.first_line = yylineno; \
+       yylloc.first_column = yycolno; \
+       yylloc.last_line = yylineno; \
+       yylloc.last_column = yycolno + yyleng; \
+       yycolno += yyleng;
 %}
 
 %option noyywrap
@@ -60,6 +67,7 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 {MULTIPLE_COMMENT} {/* skip for comment */}
 
 [ \t\r]+ { /* skip whitespace */ }
+\n { yycolno = 1; }
 
 {INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error Type A: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID; }
 . { has_error = 1; fprintf(stderr, "Error Type A: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
