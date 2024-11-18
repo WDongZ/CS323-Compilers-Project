@@ -1,10 +1,10 @@
 %{
-#include<stdio.h>
-#include "lex.yy.c"
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include "Node.hpp"
 extern int yyparse();
+extern int yylex();
 extern FILE* yyin;
 Node* root = nullptr;
 void yyerror(const std::string& s);
@@ -201,52 +201,10 @@ Args : Exp COMMA Args   { $$ = Node::makeNode(NodeType::Args,{$1,$2,$3}); }
     ;
 
 Var : INTEGER          { $$ = $1; }
-    // | PLUS INTEGER     { $$ = $2; }
-    // | MINUS INTEGER    {
-    //                     $$ = $2;
-    //                     int ll = strlen($$->val);
-    //                     $$->val = (char *)realloc($$->val, (ll + 2) * sizeof(char));
-    //                     for(int i=ll;i>=1;i--){
-    //                         $$->val[i] = $$->val[i-1];
-    //                     }
-    //                     $$->val[0]='-';
-    //                 }
     | ID            { $$ = $1; }
-    // | PLUS ID       { $$ = $2; }
-    // | MINUS ID      {
-    //                     $$ = $2;
-    //                     int ll = strlen($$->val);
-    //                     $$->val = (char *)realloc($$->val, (ll + 2) * sizeof(char));
-    //                     for(int i=ll;i>=1;i--){
-    //                         $$->val[i] = $$->val[i-1];
-    //                     }
-    //                     $$->val[0]='-';
-    //                 }
     | FLOAT         { $$ = $1; }
-    // | PLUS FLOAT    { $$ = $2; }
-    // | MINUS FLOAT   {
-    //                     $$ = $2;
-    //                     int ll = strlen($$->val);
-    //                     $$->val = (char *)realloc($$->val, (ll + 2) * sizeof(char));
-    //                     for(int i=ll;i>=1;i--){
-    //                         $$->val[i] = $$->val[i-1];
-    //                     }
-    //                     $$->val[0]='-';
-    //                 }
     | CHAR          { $$ = $1; }
-    // | PLUS CHAR     { $$ = $2; }
-    // | MINUS CHAR    {
-    //                     $$ = $2;
-    //                     int ll = strlen($$->val);
-    //                     $$->val = (char *)realloc($$->val, (ll + 2) * sizeof(char));
-    //                     for(int i=ll;i>=1;i--){
-    //                         $$->val[i] = $$->val[i-1];
-    //                     }
-    //                     $$->val[0]='-';
-    //                 }
     | INVALID       { $$ = $1; }
-    // | PLUS INVALID  { $$ = $2; }
-    // | MINUS INVALID { $$ = $2; }
     ;
 
 %%

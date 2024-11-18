@@ -2,13 +2,11 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include "Node.hpp"
-    #include "syntax.tab.hh"
-    #define YYSTYPE Node*
+    #include "syntax.tab.h"
     extern YYSTYPE yylval;
     extern "C" int yylex();
     int has_error = 0;
-    using token = yy::parser::token;
-
+    // using token = yy::parser::token;
 %}
 
 %option noyywrap
@@ -25,46 +23,46 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
 ILLEGAL_TOKEN .+
 
 %%
-"if" {yylval = new Node(NodeType::If, yytext); return token::IF;}
-"else" {yylval = new Node(NodeType::Else, yytext); return token::ELSE;}
-"while" {yylval = new Node(NodeType::While, yytext); return token::WHILE;}
-"return" {yylval = new Node(NodeType::Return, yytext); return token::RETURN;}
-"." {yylval = new Node(NodeType::Dot, yytext); return token::DOT;}
-";" {yylval = new Node(NodeType::Semi, yytext); return token::SEMI;}
-"," {yylval = new Node(NodeType::Comma, yytext); return token::COMMA;}
-"=" {yylval = new Node(NodeType::Assign, yytext); return token::ASSIGN;}
-"<" {yylval = new Node(NodeType::Lt, yytext); return token::LT;}
-"<=" {yylval = new Node(NodeType::Le, yytext); return token::LE;}
-">" {yylval = new Node(NodeType::Gt, yytext); return token::GT;}
-">=" {yylval = new Node(NodeType::Ge, yytext); return token::GE;}
-"!=" {yylval = new Node(NodeType::Ne, yytext); return token::NE;}
-"==" {yylval = new Node(NodeType::Eq, yytext); return token::EQ;}
-"+" {yylval = new Node(NodeType::Plus, yytext); return token::PLUS;}
-"-" {yylval = new Node(NodeType::Minus, yytext); return token::MINUS;}
-"*" {yylval = new Node(NodeType::Mul, yytext); return token::MUL;}
-"/" {yylval = new Node(NodeType::Div, yytext); return token::DIV;}
-"&&" {yylval = new Node(NodeType::And, yytext); return token::AND;}
-"||" {yylval = new Node(NodeType::Or, yytext); return token::OR;}
-"!" {yylval = new Node(NodeType::Not, yytext); return token::NOT;}
-"(" {yylval = new Node(NodeType::Lp, yytext); return token::LP;}
-")" {yylval = new Node(NodeType::Rp, yytext); return token::RP;}
-"[" {yylval = new Node(NodeType::Lb, yytext); return token::LB;}
-"]" {yylval = new Node(NodeType::Rb, yytext); return token::RB;}
-"{" {yylval = new Node(NodeType::Lc, yytext); return token::LC;}
-"}" {yylval = new Node(NodeType::Rc, yytext); return token::RC;}
+"if" {yylval.node = new Node(NodeType::If, yytext); return IF;}
+"else" {yylval.node = new Node(NodeType::Else, yytext); return ELSE;}
+"while" {yylval.node = new Node(NodeType::While, yytext); return WHILE;}
+"return" {yylval.node = new Node(NodeType::Return, yytext); return RETURN;}
+"." {yylval.node = new Node(NodeType::Dot, yytext); return DOT;}
+";" {yylval.node = new Node(NodeType::Semi, yytext); return SEMI;}
+"," {yylval.node = new Node(NodeType::Comma, yytext); return COMMA;}
+"=" {yylval.node = new Node(NodeType::Assign, yytext); return ASSIGN;}
+"<" {yylval.node = new Node(NodeType::Lt, yytext); return LT;}
+"<=" {yylval.node = new Node(NodeType::Le, yytext); return LE;}
+">" {yylval.node = new Node(NodeType::Gt, yytext); return GT;}
+">=" {yylval.node = new Node(NodeType::Ge, yytext); return GE;}
+"!=" {yylval.node = new Node(NodeType::Ne, yytext); return NE;}
+"==" {yylval.node = new Node(NodeType::Eq, yytext); return EQ;}
+"+" {yylval.node = new Node(NodeType::Plus, yytext); return PLUS;}
+"-" {yylval.node = new Node(NodeType::Minus, yytext); return MINUS;}
+"*" {yylval.node = new Node(NodeType::Mul, yytext); return MUL;}
+"/" {yylval.node = new Node(NodeType::Div, yytext); return DIV;}
+"&&" {yylval.node = new Node(NodeType::And, yytext); return AND;}
+"||" {yylval.node = new Node(NodeType::Or, yytext); return OR;}
+"!" {yylval.node = new Node(NodeType::Not, yytext); return NOT;}
+"(" {yylval.node = new Node(NodeType::Lp, yytext); return LP;}
+")" {yylval.node = new Node(NodeType::Rp, yytext); return RP;}
+"[" {yylval.node = new Node(NodeType::Lb, yytext); return LB;}
+"]" {yylval.node = new Node(NodeType::Rb, yytext); return RB;}
+"{" {yylval.node = new Node(NodeType::Lc, yytext); return LC;}
+"}" {yylval.node = new Node(NodeType::Rc, yytext); return RC;}
 
 
-{INTEGER} {yylval = new Node(NodeType::Int, atoi(yytext)); return token::INTEGER;}
-{FLOAT} {yylval = new Node(NodeType::Float, strtof(yytext, nullptr)); return token::FLOAT;}
-{CHARACTER} {yylval = new Node(NodeType::Char, yytext); return token::CHAR;}
-{TYPE} {yylval = new Node(NodeType::Type, yytext); return token::TYPE;}
-{ID} {yylval = new Node(NodeType::Id, yytext); return token::ID;}
+{INTEGER} {yylval.node = new Node(NodeType::Int, atoi(yytext)); return INTEGER;}
+{FLOAT} {yylval.node = new Node(NodeType::Float, strtof(yytext, nullptr)); return FLOAT;}
+{CHARACTER} {yylval.node = new Node(NodeType::Char, yytext); return CHAR;}
+{TYPE} {yylval.node = new Node(NodeType::Type, yytext); return TYPE;}
+{ID} {yylval.node = new Node(NodeType::Id, yytext); return ID;}
 
 {COMMENT} {/* skip for comment */}
 {MULTIPLE_COMMENT} {/* skip for comment */}
 
 [ \t\r]+ { /* skip whitespace */ }
 
-{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return token::INVALID; }
-{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return token::INVALID; }
+{INVALID_NUMBER} { has_error = 1; fprintf(stderr, "Error: Invalid number at line %d: %s\n", yylineno, yytext); return INVALID; }
+{ILLEGAL_TOKEN} { has_error = 1; fprintf(stderr, "Error: Illegal token at line %d: %s\n", yylineno, yytext); return INVALID; }
 %%
