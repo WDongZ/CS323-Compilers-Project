@@ -123,7 +123,7 @@ inline std::ostream &operator<<(std::ostream &os, NodeType type) {
 class Node {
 private:
     std::variant<std::string, int, float> value;
-
+    size_t linec = 0;
     void printTree(std::ostream& os, int depth) const {
         os << std::string(depth * 4, ' ') << getText() << '\n';
         for (const auto& child : children) {
@@ -176,11 +176,15 @@ public:
     std::string getText() const {
         switch (type) {
             case NodeType::Int:
-                return std::to_string(std::get<int>(value));
+                return "INT: " + std::to_string(std::get<int>(value));
             case NodeType::Float:
-                return std::to_string(std::get<float>(value));
+                return "FLOAT" + std::to_string(std::get<float>(value));
+            case NodeType::Char:
+                return std::string("CHAR: ") + "'" + std::get<std::string>(value) + "'";
+            case NodeType::Id:
+                return "ID: " + std::get<std::string>(value);
             default:
-                return std::get<std::string>(value);
+                return type_to_string(type);
         }
     }
     // cout
