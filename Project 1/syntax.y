@@ -1,10 +1,10 @@
 %{
-#include<stdio.h>
-#include "lex.yy.c"
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include "Node.hpp"
 extern int yyparse();
+extern int yylex();
 extern FILE* yyin;
 Node* root = nullptr;
 void yyerror(const std::string& s);

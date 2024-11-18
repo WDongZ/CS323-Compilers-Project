@@ -59,7 +59,7 @@ enum NodeType {
     Args    
 };
 
-std::string to_string(NodeType type) {
+inline std::string type_to_string(NodeType type) {
     switch (type) {
         case Type: return "Type";
         case Int: return "Int";
@@ -116,8 +116,8 @@ std::string to_string(NodeType type) {
     }
 }
 
-std::ostream &operator<<(std::ostream &os, NodeType type) {
-    os << to_string(type);
+inline std::ostream &operator<<(std::ostream &os, NodeType type) {
+    os << type_to_string(type);
     return os;
 }
 class Node {
@@ -135,10 +135,10 @@ public:
     std::vector<Node *> children;
     // factory method
     static Node * makeNode(NodeType type){
-        return new Node(type, to_string(type));
+        return new Node(type, type_to_string(type));
     }
     static Node * makeNode(NodeType type, std::initializer_list<Node *> children){
-        Node * node = new Node(type, to_string(type));
+        Node * node = new Node(type, type_to_string(type));
         for(auto child : children){
             node->children.push_back(child);
         }
