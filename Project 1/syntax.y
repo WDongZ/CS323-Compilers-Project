@@ -130,6 +130,7 @@ Stmt : SEMI                                     { $$ = Node::makeNode(NodeType::
     | WHILE error Exp RP Stmt                   { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Expected \'(\' after \'while\' at line " + std::to_string(@$.first_line)); }
     | WHILE LP Exp error Stmt                   { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
     | ELSE Stmt { $$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Expected \'if\' before \'else\' at line " + std::to_string(@$.first_line)); }
+    | ASSIGN error{$$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Unexpected statement at line "+std::to_string(@$.first_line)); }
     ;
 
 /* local definition */
