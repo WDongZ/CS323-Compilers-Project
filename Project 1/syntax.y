@@ -77,7 +77,7 @@ VarDec : ID                 { $$ = Node::makeNode(NodeType::VarDec,{$1}); }
     | VarDec LB INTEGER RB     { $$ = Node::makeNode(NodeType::VarDec,{$1,$2,$3,$4}); }
     | VarDec LB INTEGER error  { $$ = Node::makeNode(NodeType::VarDec);error=1;  yyerror1("Type B,Missing closing braces \']\'",@$.first_line);}
     | VarDec INTEGER RB        { $$ = Node::makeNode(NodeType::VarDec); error=1;  yyerror1("Type B,Missing closing braces \']\'",@$.first_line);}
-    | INVALID               { $$ = Node::makeNode(NodeType::VarDec);  }
+    | INVALID               { $$ = Node::makeNode(NodeType::VarDec);}
     ;
 
 FunDec : ID LP VarList RP   { $$ = Node::makeNode(NodeType::FunDec,{$1,$2,$3,$4});}
@@ -130,6 +130,7 @@ Stmt : SEMI                                     { $$ = Node::makeNode(NodeType::
     | WHILE error Exp RP Stmt                   { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror1("Type B,Expected \'(\' after \'while\'",@$.first_line) ; }
     | WHILE LP Exp error Stmt                   { $$ = Node::makeNode(NodeType::Stmt); error=1;  yyerror1("Type B,Missing closing parenthesis \')\'",@$.first_line) ; }
     | ELSE Stmt { $$ = Node::makeNode(NodeType::Stmt);error=1;  yyerror1("Type B,Expected \'if\' before \'else\'",@$.first_line); }
+    | ASSIGN error{$$ = Node::makeNode(NodeType::Stmt);error=1;  yyerror1("Type B,Unexpected statement",@$.first_line); }
     ;
 
 /* local definition */
