@@ -40,7 +40,7 @@ void yyerror(const std::string& s);
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1});root = $$;}
+Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1});root = $$;std::cout << *root << std::endl;}
     ;
 ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList);}
     | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}); }
