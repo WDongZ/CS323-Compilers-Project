@@ -19,15 +19,15 @@
 %option yylineno
 TYPE "int"|"float"|"char"
 ID [a-zA-Z_][a-zA-Z0-9_]*
-INTEGER [0-9]+
-FLOAT [0-9]+\.[0-9]+
+INTEGER [+-]?(0|[1-9][0-9]*)|0x(0|[1-9a-fA-F][0-9a-fA-F]*)
+FLOAT (0|([1-9][0-9]*))\.[0-9]+
 CHARACTER ('.')|('\\x[0-9a-fA-F]{2}')
 INVALID_CHAR \'.*\'
 WRONG_ID ({INTEGER}{ID})|{INVALID_CHAR}
 COMMENT "//".*$
 MULTIPLE_COMMENT "/*"((("*"[^/])?)|[^*])*"*/"
 ILLEGAL_TOKEN [^\x20^\n^\x09]
-INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(00+)
+INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(0{2,}(\.[0-9]+)?)|0[0-9]+
 
 %%
 "if" {yylval.node = new Node(NodeType::If, yytext, yylineno); return IF;}
