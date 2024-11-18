@@ -51,6 +51,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 a
+sql
 lex.yy.c
 syntax.tab.c
 syntax.tab.h
