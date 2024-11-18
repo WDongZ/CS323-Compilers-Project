@@ -15,6 +15,7 @@ enum NodeType {
     Else,
     While,
     Return,
+    Struct,
     Dot,
     Semi,
     Comma,
