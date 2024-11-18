@@ -5,6 +5,7 @@
     #include "syntax.tab.hh"
     #define YYSTYPE Node*
     extern YYSTYPE yylval;
+    extern "C" int yylex();
     int has_error = 0;
     using token = yy::parser::token;
 
