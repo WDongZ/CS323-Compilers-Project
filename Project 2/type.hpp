@@ -24,9 +24,6 @@ public:
 };
 
 Attribute* getAttributePrimitive(Node* node);
-Attribute* getAttributeInt();
-Attribute* getAttributeChar();
-Attribute* getAttributeFloat();
 
 class Array {
 public:
