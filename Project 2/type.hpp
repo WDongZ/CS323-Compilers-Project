@@ -11,36 +11,36 @@ enum Category {
 class Array;
 class ParamsList;
 
-class GlobalType {
+class Attribute {
 public:
     NodeType nodetype;
     Array* array_ptr = nullptr;
     ParamsList* params_ptr = nullptr;
     Category category;
 
-    GlobalType(Category category, NodeType nodetype);
-    GlobalType(Category category, Array* array_ptr);
-    GlobalType(Category category, ParamsList* params_ptr);
+    Attribute(Category category, NodeType nodetype);
+    Attribute(Category category, Array* array_ptr);
+    Attribute(Category category, ParamsList* params_ptr);
 };
 
-GlobalType* getGlobalTypePrimitive(Node* node);
-GlobalType* getGlobalTypeInt();
-GlobalType* getGlobalTypeChar();
-GlobalType* getGlobalTypeFloat();
+Attribute* getAttributePrimitive(Node* node);
+Attribute* getAttributeInt();
+Attribute* getAttributeChar();
+Attribute* getAttributeFloat();
 
 class Array {
 public:
-    GlobalType *base;
+    Attribute *base;
     int size;
-    Array(GlobalType *base, int size);
+    Array(Attribute *base, int size);
 };
 
 class ParamsList {
 public:
     std::string name;
-    GlobalType *global_type = nullptr;
+    Attribute *global_type = nullptr;
     ParamsList* next = nullptr;
-    ParamsList(std::string name, GlobalType* global_type, ParamsList* next);
+    ParamsList(std::string name, Attribute* global_type, ParamsList* next);
 };
 
 #endif
