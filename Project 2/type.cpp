@@ -28,3 +28,7 @@ Attribute* getAttributePrimitive(Node* node) {
             return nullptr;
     }
 }
+
+bool AttributeCompare(Attribute* attribute1, Attribute* attribute2){
+
+}

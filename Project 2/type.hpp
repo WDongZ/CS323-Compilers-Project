@@ -25,6 +25,8 @@ public:
 
 Attribute* getAttributePrimitive(Node* node);
 
+bool AttributeCompare(Attribute* attribute1, Attribute* attribute2);
+
 class Array {
 public:
     Attribute *base;
