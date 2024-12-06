@@ -30,5 +30,29 @@ Attribute* getAttributePrimitive(Node* node) {
 }
 
 bool AttributeCompare(Attribute* attribute1, Attribute* attribute2){
-
+    if(attribute1 == nullptr || attribute2 == nullptr){
+        return false;
+    }
+    if(attribute1->category == attribute2->category){
+        if(attribute1->category == Category::PRIMITIVE && attribute1->nodetype == attribute2->nodetype){
+            return true;
+        }else if(attribute1->category == Category::ARRAY && AttributeCompare(attribute1->array_ptr->base, attribute2->array_ptr->base) && attribute1->array_ptr->size == attribute2->array_ptr->size){
+            return true;
+        }else if(attribute1->category == Category::STRUCTURE || attribute2->category == Category::FUNCTION){
+            ParamsList* paramlist1 = attribute1->params_ptr;
+            ParamsList* paramlist2 = attribute2->params_ptr;
+            while(paramlist1!=nullptr && paramlist2 != nullptr){
+                if(!AttributeCompare(paramlist1->global_type, paramlist2->global_type)){
+                    return false;
+                }
+                paramlist1 = paramlist1->next;
+                paramlist2 = paramlist2->next;
+            }
+            if(paramlist1 != nullptr || paramlist2 != nullptr){
+                return false;
+            }
+            return true;
+        }
+    }
+    return false;
 }

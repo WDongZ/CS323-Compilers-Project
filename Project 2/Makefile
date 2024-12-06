@@ -14,8 +14,9 @@ LEX_FILE = lex.l
 BISON_C = syntax.tab.c
 BISON_H = syntax.tab.h
 LEX_C = lex.yy.c
-OUTPUT = a
 
+test: 
+	$(CXX) $(CXXFLAGS) -o test testSymbol.cpp
 # Default target: build the final executable
 all: $(OUTPUT)
 
