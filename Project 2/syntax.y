@@ -46,7 +46,7 @@ int error=0;
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {root = $$;std::cout << *root << std::endl;} }
+Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {parseProgram($$);} }
     ;
 ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList, @$.first_line);}
     | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}, @$.first_line); }
@@ -215,10 +215,19 @@ void yyerror(const std::string& s) {
     }
 }
 
-int main() {
-    yyin = stdin;
-    do {
-        yyparse();
-    } while (!feof(yyin));
+int main(int argc, char* argv[]) {
+    if(argc != 2){
+        return 1;
+    }
+    yyin = fopen(argv[1], "r");
+    if(yyin == nullptr){
+        std::cout << "error file" << argv[1] << std::endl;
+        return 1;
+    }
+
+    yyparse();
+
+    fclose(yyin);
+
     return 0;
 }
