@@ -1,1 +1,5 @@
-int;
+struct rabbit
+{
+  int weight;
+  float round;
+};

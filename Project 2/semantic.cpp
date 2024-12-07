@@ -1,10 +1,16 @@
 #include "symbol.hpp"
 #include "semantic.hpp"
 #include <iostream>
+#include <string>
 ScopeStack *stack;
+
+void printDebugMsg(const std::string& msg){
+    std::cout << msg << std::endl;
+}
 
 void parseProgram(Node *program)
 {
+    printDebugMsg("parseprogram done");
     stack = new ScopeStack(nullptr);
     stack->pushScope();
     parseExtDefList(program->children[0]);
@@ -13,6 +19,7 @@ void parseProgram(Node *program)
 
 void parseExtDefList(Node *ext_def_list)
 {
+    printDebugMsg("ExtDefList");
     if (ext_def_list->children.size() == 0)
         return;
     Node *ext_def = ext_def_list->children[0];
@@ -23,6 +30,7 @@ void parseExtDefList(Node *ext_def_list)
 
 void parseExtDef(Node *ext_def) // 标记
 {
+    printDebugMsg("ExtDef");
     Node *specifier = ext_def->children[0];
     Attribute *attribute = parseSpecifier(specifier);
     Node *child = ext_def->children[1];
@@ -58,6 +66,7 @@ void parseExtDef(Node *ext_def) // 标记
 
 Attribute *parseSpecifier(Node *Specifier)
 { //
+    printDebugMsg("specifier");
     int i = 0;
     Attribute *attribute = nullptr;
     Node *node = Specifier->children[0];
@@ -116,6 +125,7 @@ Attribute *parseSpecifier(Node *Specifier)
 
 ParamsList *parseDefList(Node *def_list, ParamsList *paramslist) // 递归是否要使用参数i 然后调用i+1？
 {
+    printDebugMsg("deflist");
     if (def_list->children.size() == 0)
     { // 无参
         return paramslist;
@@ -135,6 +145,7 @@ ParamsList *parseDefList(Node *def_list, ParamsList *paramslist) // 递归是否
 
 ParamsList *parseDef(Node *def, ParamsList *paramslist)
 {
+    printDebugMsg("def");
     Node *specifier = def->children[0];
     Node *dec_list = def->children[1]; // def ->Specifier DecList SEMI
 
@@ -146,6 +157,7 @@ ParamsList *parseDef(Node *def, ParamsList *paramslist)
 
 ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attribute) // DecList -> Dec | Dec COMMA DecList
 {
+    printDebugMsg("decList");
     Node *dec = dec_list->children[0];
     paramslist = parseDec(dec, paramslist, attribute);
     if (dec_list->children.size() != 1)
@@ -159,6 +171,7 @@ ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attr
 
 ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) // Dec -> VarDec | Dec -> VarDec ASSIGN Exp
 {
+    printDebugMsg("dec");
     Node *var_dec = dec->children[0];
     ParamsList *var_dec_fields = parseVarDec(var_dec, attribute);
     if (dec->children.size() != 1)
@@ -176,6 +189,7 @@ ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) //
 
 ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | VarDec -> ID LP VarList RP
 {
+    printDebugMsg("vardec");
     Attribute *last_attribute = attribute;
     Node *next_node = nullptr;
     while (var_dec->children.size() == 4)
@@ -202,6 +216,7 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | Var
 
 void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec COMMA VarList | VarList -> ParamDec
 {
+    printDebugMsg("varlist");
     Node *param_dec = var_list->children[0];
     paramslist = parseParamDec(param_dec, paramslist);
     if (var_list->children.size() != 1)
@@ -214,6 +229,7 @@ void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec
 
 ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) // ParamDec -> Specifier VarDec
 {
+    printDebugMsg("paramDec");
     Node *specifier = param_dec->children[0];
     Attribute *specifier_attribute = parseSpecifier(specifier);
     if (specifier_attribute != nullptr)
@@ -228,6 +244,7 @@ ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) // ParamDec -
 
 Attribute *parseExp(Node *exp)
 { // 1. 3. 4.
+    printDebugMsg("exp");
     Attribute *attribute = nullptr;
     if (exp->children.size() == 1)
     {
@@ -422,6 +439,7 @@ Attribute *parseExp(Node *exp)
 
 Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP | ID LP RP
 {
+    printDebugMsg("fundec");
     Node *func_id = fun_dec->children[0];
     ParamsList *paramslist = new ParamsList(func_id->getText(), attribute, nullptr);
     Attribute *ans_attribute = new Attribute(Category::FUNCTION, paramslist);
@@ -437,6 +455,7 @@ Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP 
 
 void parseCompSt(Node *comp_st, Attribute *attribute) // LC DefList StmtList RC
 {
+    printDebugMsg("compst");
     Node *_LC = comp_st->children[0];
     Node *def_list = comp_st->children[1];
     Node *stmt_list = comp_st->children[2];
@@ -447,6 +466,7 @@ void parseCompSt(Node *comp_st, Attribute *attribute) // LC DefList StmtList RC
 
 void parseStmtList(Node *stmt_list, Attribute *attribute) // stmt StmtList
 {
+    printDebugMsg("stmtlist");
     if (stmt_list->children.size() != 0)
     {
         Node *stmt = stmt_list->children[0];
@@ -458,6 +478,7 @@ void parseStmtList(Node *stmt_list, Attribute *attribute) // stmt StmtList
 
 void parseStmt(Node *stmt, Attribute *attribute)
 {
+    printDebugMsg("stmt");
     Node *node1 = stmt->children[0];
     if (node1->type == NodeType::Exp)
     {
@@ -520,6 +541,7 @@ void parseStmt(Node *stmt, Attribute *attribute)
 
 void parseExtDecList(Node *ext_dec_list, Attribute *attribute) // ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
 {
+    printDebugMsg("ExtDecList");
     Node* var_dec = ext_dec_list->children[0];
     parseVarDec(var_dec, attribute);
     if(ext_dec_list->children.size()!= 1){
