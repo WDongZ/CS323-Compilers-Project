@@ -1,4 +1,4 @@
-#include "Symbol.hpp"
+#include "symbol.hpp"
 #include "semantic.hpp"
 #include <iostream>
 ScopeStack *stack;
@@ -518,7 +518,7 @@ void parseStmt(Node *stmt, Attribute *attribute)
     }
 }
 
-void parsExtDecList(Node *ext_dec_list, Attribute *attribute) // ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
+void parseExtDecList(Node *ext_dec_list, Attribute *attribute) // ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
 {
     Node* var_dec = ext_dec_list->children[0];
     parseVarDec(var_dec, attribute);

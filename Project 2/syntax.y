@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 #include "Node.hpp"
+#include "type.hpp"
+#include "symbol.hpp"
+#include "semantic.hpp"
 extern int yyparse();
 extern int yylex();
 extern FILE* yyin;

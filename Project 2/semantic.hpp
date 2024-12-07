@@ -27,6 +27,7 @@ Attribute* parseSpecifier(Node* specifier);
 Attribute* parseFunDec(Node* fun_dec, Attribute* attribute);
 
 Attribute* checkArgs(Node* node1, Attribute* func_type, Node* node2);
+Attribute *checkAssign(Node *node1, Node *_ASSIGN, Node *node2);
 
 
 #endif
