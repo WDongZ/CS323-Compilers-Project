@@ -45,7 +45,7 @@ void parseExtDef(Node *ext_def) // 标记
     {
         stack->pushScope();
         Node *fun_dec = child;
-        Node *comp_st = ext_def->children[0];
+        Node *comp_st = ext_def->children[2];
         Attribute *fun_dec_attribute = parseFunDec(fun_dec, attribute);
 
         if (fun_dec_attribute != nullptr)
