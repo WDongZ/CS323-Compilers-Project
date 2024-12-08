@@ -38,7 +38,7 @@ bool AttributeCompare(Attribute* attribute1, Attribute* attribute2){
             return true;
         }else if(attribute1->category == Category::ARRAY && AttributeCompare(attribute1->array_ptr->base, attribute2->array_ptr->base) && attribute1->array_ptr->size == attribute2->array_ptr->size){
             return true;
-        }else if(attribute1->category == Category::STRUCTURE || attribute2->category == Category::FUNCTION){
+        }else if(attribute1->category == Category::STRUCTURE || attribute1->category == Category::FUNCTION){
             ParamsList* paramlist1 = attribute1->params_ptr;
             ParamsList* paramlist2 = attribute2->params_ptr;
             while(paramlist1!=nullptr && paramlist2 != nullptr){

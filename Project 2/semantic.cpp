@@ -5,12 +5,12 @@
 ScopeStack *stack;
 
 void printDebugMsg(const std::string& msg){
-    std::cout << msg << std::endl;
+    //std::cout << msg << std::endl;
 }
 
 void parseProgram(Node *program)
 {
-    //printDebugMsg("parseprogram done");
+    printDebugMsg("parseprogram done");
     stack = new ScopeStack(nullptr);
     stack->pushScope();
     parseExtDefList(program->children[0]);
@@ -19,7 +19,7 @@ void parseProgram(Node *program)
 
 void parseExtDefList(Node *ext_def_list)
 {
-    //printDebugMsg("ExtDefList");
+    printDebugMsg("ExtDefList");
     if (ext_def_list->children.size() == 0)
         return;
     Node *ext_def = ext_def_list->children[0];
@@ -30,7 +30,7 @@ void parseExtDefList(Node *ext_def_list)
 
 void parseExtDef(Node *ext_def) // 标记
 {
-    //printDebugMsg("ExtDef");
+    printDebugMsg("ExtDef");
     Node *specifier = ext_def->children[0];
     Attribute *attribute = parseSpecifier(specifier);
     Node *child = ext_def->children[1];
@@ -56,7 +56,7 @@ void parseExtDef(Node *ext_def) // 标记
             }
             else
             {
-                stack->top->insert(func_name, fun_dec_attribute);
+                stack->insert(func_name, fun_dec_attribute);
                 parseCompSt(comp_st, attribute);
             }
         }
@@ -65,8 +65,7 @@ void parseExtDef(Node *ext_def) // 标记
 
 Attribute *parseSpecifier(Node *Specifier)
 { //
-    //printDebugMsg("specifier");
-    int i = 0;
+    printDebugMsg("specifier");
     Attribute *attribute = nullptr;
     Node *node = Specifier->children[0];
     if (node->type == NodeType::Type)
@@ -104,7 +103,7 @@ Attribute *parseSpecifier(Node *Specifier)
 
             ParamsList *params_ptr = parseDefList(def_list, nullptr);
             attribute = new Attribute(Category::STRUCTURE, params_ptr);
-            stack->top->insert(struct_name, attribute);
+            stack->insert(struct_name, attribute);
         }
         else
         { // STRUCT ID
@@ -124,7 +123,7 @@ Attribute *parseSpecifier(Node *Specifier)
 
 ParamsList *parseDefList(Node *def_list, ParamsList *paramslist) // 递归是否要使用参数i 然后调用i+1？
 {
-    //printDebugMsg("deflist");
+    printDebugMsg("deflist");
     if (def_list->children.size() == 0)
     { // 无参
         return paramslist;
@@ -144,7 +143,7 @@ ParamsList *parseDefList(Node *def_list, ParamsList *paramslist) // 递归是否
 
 ParamsList *parseDef(Node *def, ParamsList *paramslist)
 {
-    //printDebugMsg("def");
+    printDebugMsg("def");
     Node *specifier = def->children[0];
     Node *dec_list = def->children[1]; // def ->Specifier DecList SEMI
 
@@ -156,7 +155,7 @@ ParamsList *parseDef(Node *def, ParamsList *paramslist)
 
 ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attribute) // DecList -> Dec | Dec COMMA DecList
 {
-    //printDebugMsg("decList");
+    printDebugMsg("decList");
     Node *dec = dec_list->children[0];
     paramslist = parseDec(dec, paramslist, attribute);
     if (dec_list->children.size() != 1)
@@ -170,7 +169,7 @@ ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attr
 
 ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) // Dec -> VarDec | Dec -> VarDec ASSIGN Exp
 {
-    //printDebugMsg("dec");
+    printDebugMsg("dec");
     Node *var_dec = dec->children[0];
     ParamsList *var_dec_fields = parseVarDec(var_dec, attribute);
     if (dec->children.size() != 1)
@@ -188,7 +187,7 @@ ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) //
 
 ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | VarDec -> ID LP VarList RP
 {
-    //printDebugMsg("vardec");
+    printDebugMsg("vardec");
     Attribute *last_attribute = attribute;
     Node *next_node = nullptr;
     while (var_dec->children.size() == 4)
@@ -215,7 +214,7 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | Var
 
 void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec COMMA VarList | VarList -> ParamDec
 {
-    //printDebugMsg("varlist");
+    printDebugMsg("varlist");
     Node *param_dec = var_list->children[0];
     paramslist = parseParamDec(param_dec, paramslist);
     if (var_list->children.size() != 1)
@@ -228,7 +227,7 @@ void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec
 
 ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) // ParamDec -> Specifier VarDec
 {
-    //printDebugMsg("paramDec");
+    printDebugMsg("paramDec");
     Node *specifier = param_dec->children[0];
     Attribute *specifier_attribute = parseSpecifier(specifier);
     if (specifier_attribute != nullptr)
@@ -243,7 +242,7 @@ ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) // ParamDec -
 
 Attribute *parseExp(Node *exp)
 { // 1. 3. 4.
-    //printDebugMsg("exp");
+    printDebugMsg("exp");
     Attribute *attribute = nullptr;
     if (exp->children.size() == 1)
     {
@@ -294,7 +293,7 @@ Attribute *parseExp(Node *exp)
         }
         else if (node1->type == NodeType::Minus)
         {
-            if (exp_attribute->category == Category::PRIMITIVE || exp_attribute->nodetype == NodeType::Char)
+            if (exp_attribute->category != Category::PRIMITIVE || exp_attribute->nodetype == NodeType::Char)
             {
                 std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
             }
@@ -317,8 +316,23 @@ Attribute *parseExp(Node *exp)
                  node2->type == NodeType::Ne || node2->type == NodeType::Eq || node2->type == NodeType::Plus || node2->type == NodeType::Minus ||
                  node2->type == NodeType::Mul || node2->type == NodeType::Div)
         {
-            Attribute *node1_attribute = parseExp(node1);
-            Attribute *node2_attribute = parseExp(node3);
+            Node* exp1 = node1;
+            Node* exp2 = node3;
+
+            if(exp1 != nullptr){
+                std::cout <<  type_to_string(exp1->type) <<std::endl;
+            }
+            
+            if(exp2!=nullptr){
+                std::cout << exp2->getText() << std::endl;
+            }
+            
+
+            Attribute *node1_attribute = parseExp(exp1);
+            Attribute *node2_attribute = parseExp(exp2);
+
+
+
             if (!AttributeCompare(node1_attribute, node2_attribute) || node1_attribute->category != Category::PRIMITIVE)
             {
                 std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
@@ -330,10 +344,13 @@ Attribute *parseExp(Node *exp)
         }
         else if (node2->type == NodeType::And || node2->type == NodeType::Or)
         {
-            Attribute *node1_attribute = parseExp(node1);
-            Attribute *node2_attribute = parseExp(node2);
+            Node* exp1 = node1;
+            Node* exp2 = node3;
+            Attribute *node1_attribute = parseExp(exp1);
+            Attribute *node2_attribute = parseExp(exp2);
             if (!AttributeCompare(node1_attribute, node2_attribute) || !(node1_attribute->category == Category::PRIMITIVE && node1_attribute->nodetype == NodeType::Int))
             {
+                std::cout << node1_attribute->nodetype << "   ----   " << node2_attribute->nodetype << std::endl;
                 std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
             }
             else
@@ -343,7 +360,9 @@ Attribute *parseExp(Node *exp)
         }
         else if (node2->type == NodeType::Dot)
         {
-            Attribute *node1_attribute = parseExp(node1);
+            Node* exp1 = node1;
+            Node* member_id = node3;
+            Attribute *node1_attribute = parseExp(exp1);
             if (node1_attribute->category != Category::STRUCTURE)
             {
                 std::cout << "Error type 13 at line " << node1->linec << ": accessing with non-struct variable " << std::endl;
@@ -412,12 +431,14 @@ Attribute *parseExp(Node *exp)
                 return nullptr;
             }
             Attribute *func_attribute = stack->lookup(node1->getText());
-            attribute = checkArgs(node1, func_attribute, node3);
+            attribute = checkArgs(node3, func_attribute, node1);
         }
         else if (node2->type == NodeType::Lb)
         { // Exp Lb EXP RB
-            Attribute *node1_attribute = parseExp(node1);
-            Attribute *node3_attribute = parseExp(node3);
+            Node* exp1 = node1;
+            Node* exp2 = node3;
+            Attribute *node1_attribute = parseExp(exp1);
+            Attribute *node3_attribute = parseExp(exp2);
             if (node1_attribute->category != Category::ARRAY)
             {
                 std::cout << "Error type 10 at line " << node1->linec << ": indexing on non-array variable " << std::endl;
@@ -438,11 +459,13 @@ Attribute *parseExp(Node *exp)
 
 Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP | ID LP RP
 {
-    //printDebugMsg("fundec");
+    printDebugMsg("fundec");
     Node *func_id = fun_dec->children[0];
     ParamsList *paramslist = new ParamsList(func_id->getText(), attribute, nullptr);
     Attribute *ans_attribute = new Attribute(Category::FUNCTION, paramslist);
-    if (fun_dec->children.size() == 4)
+    if (fun_dec->children.size() == 3){
+        paramslist->next = nullptr;
+    }else
     {
         Node *_LP = fun_dec->children[1];
         Node *var_list = fun_dec->children[2];
@@ -454,7 +477,7 @@ Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP 
 
 void parseCompSt(Node *comp_st, Attribute *attribute) // LC DefList StmtList RC
 {
-    //printDebugMsg("compst");
+    printDebugMsg("compst");
     Node *_LC = comp_st->children[0];
     Node *def_list = comp_st->children[1];
     Node *stmt_list = comp_st->children[2];
@@ -465,7 +488,7 @@ void parseCompSt(Node *comp_st, Attribute *attribute) // LC DefList StmtList RC
 
 void parseStmtList(Node *stmt_list, Attribute *attribute) // stmt StmtList
 {
-    //printDebugMsg("stmtlist");
+    printDebugMsg("stmtlist");
     if (stmt_list->children.size() != 0)
     {
         Node *stmt = stmt_list->children[0];
@@ -477,7 +500,7 @@ void parseStmtList(Node *stmt_list, Attribute *attribute) // stmt StmtList
 
 void parseStmt(Node *stmt, Attribute *attribute)
 {
-    //printDebugMsg("stmt");
+    printDebugMsg("stmt");
     Node *node1 = stmt->children[0];
     if (node1->type == NodeType::Exp)
     {
@@ -507,6 +530,7 @@ void parseStmt(Node *stmt, Attribute *attribute)
         {
             if (!(exp_attribute->category == Category::PRIMITIVE && exp_attribute->nodetype == NodeType::Int))
             {
+                std::cout << exp_attribute->nodetype << std::endl;
                 std::cout << "Error type 7 at line " << exp->linec << ": binary operation on non-number variables" << std::endl;
             }
             else
@@ -528,6 +552,7 @@ void parseStmt(Node *stmt, Attribute *attribute)
         Attribute* exp_attribute = parseExp(exp);
         if(exp_attribute != nullptr) {
             if(!(exp_attribute->category == Category::PRIMITIVE && exp_attribute->nodetype == NodeType::Int)){
+                std::cout << exp_attribute->nodetype;
                 std::cout << "Error type 7 at line " << exp->linec << ": binary operation on non-number variables" << std::endl;
             }else {
                 Node* _RP = stmt->children[3];
@@ -540,12 +565,12 @@ void parseStmt(Node *stmt, Attribute *attribute)
 
 void parseExtDecList(Node *ext_dec_list, Attribute *attribute) // ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
 {
-    //printDebugMsg("ExtDecList");
+    printDebugMsg("ExtDecList");
     Node* var_dec = ext_dec_list->children[0];
     parseVarDec(var_dec, attribute);
     if(ext_dec_list->children.size()!= 1){
-        Node* _COMMA = ext_dec_list->children[2];
-        Node* ext_dec_list1 = ext_dec_list->children[3];
+        Node* _COMMA = ext_dec_list->children[1];
+        Node* ext_dec_list1 = ext_dec_list->children[2];
         parseExtDecList(ext_dec_list1, attribute);
     }
 }

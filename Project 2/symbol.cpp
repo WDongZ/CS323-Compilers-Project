@@ -2,6 +2,7 @@
 
 void SymbolTable::insert(const std::string& name, Attribute* attribute)
 {
+    //std::cout << "insert" << name  <<"in stack!" << std::endl; 
     if(table.find(name) == table.end()){
         table[name] = attribute;
     }
@@ -38,6 +39,7 @@ void ScopeStack::pushScope(){
 
 void ScopeStack::insert(const std::string& name, Attribute* attribute){
     top->insert(name, attribute);
+
 }
 
 void ScopeStack::remove(const std::string& name){
@@ -46,7 +48,7 @@ void ScopeStack::remove(const std::string& name){
 
 Attribute* ScopeStack::lookup(const std::string& name)
 {
-    printStack();
+    //printStack();
     SymbolTable* current_scope = top;
     while (current_scope != nullptr) {
         Attribute* result = current_scope->lookup(name);
