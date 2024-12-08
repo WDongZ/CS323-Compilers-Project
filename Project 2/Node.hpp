@@ -75,6 +75,7 @@ inline std::string type_to_string(NodeType type) {
         case Semi: return "Semi";
         case Comma: return "Comma";
         case Assign: return "Assign";
+        case Struct: return "Struct";
         case Lt: return "Lt";
         case Le: return "Le";
         case Gt: return "Gt";
@@ -88,12 +89,12 @@ inline std::string type_to_string(NodeType type) {
         case And: return "And";
         case Or: return "Or";
         case Not: return "Not";
-        case Lp: return "Lp";
-        case Rp: return "Rp";
-        case Lb: return "Lb";
-        case Rb: return "Rb";
-        case Lc: return "Lc";
-        case Rc: return "Rc";
+        case Lp: return "LP";
+        case Rp: return "RP";
+        case Lb: return "LB";
+        case Rb: return "RB";
+        case Lc: return "LC";
+        case Rc: return "RC";
         case Program: return "Program";
         case ExtDefList: return "ExtDefList";
         case ExtDef: return "ExtDef";
@@ -113,7 +114,10 @@ inline std::string type_to_string(NodeType type) {
         case Dec: return "Dec";
         case Exp: return "Exp";
         case Args: return "Args";
-        default: return "Unknown";
+        default: {
+            std::cerr << "Unknown NodeType: " << type << std::endl;
+            return "Unknown";
+        }
     }
 }
 
@@ -184,6 +188,8 @@ public:
                 return std::string("CHAR: ") + "'" + std::get<std::string>(value) + "'";
             case NodeType::Id:
                 return "ID: " + std::get<std::string>(value);
+            case NodeType::Type:
+                return "TYPE: " + std::get<std::string>(value);
             default:
                 return type_to_string(type);
         }
