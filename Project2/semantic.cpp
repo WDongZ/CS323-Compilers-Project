@@ -72,6 +72,7 @@ Attribute *parseSpecifier(Node *Specifier)
     Node *node = Specifier->children[0];
     if (node->type == NodeType::Type)
     { // 当node的节点类型是Type的时候
+        std::cout << "node.getText():?" << node->getText() << std::endl;
         if (node->getText() == "int")
         {
             attribute = new Attribute(Category::PRIMITIVE, NodeType::Int);
