@@ -30,7 +30,7 @@ $(LEX_C): $(LEX_FILE)
 	$(FLEX) $(LEX_FILE)
 
 $(OUTPUT): $(BISON_C) $(LEX_C)
-	$(CXX) $(CXXFLAGS) -o $(OUTPUT) $(BISON_C) $(LEX_C) semantic.cpp symbol.cpp type.cpp 
+	$(CXX) $(CXXFLAGS) -g -o $(OUTPUT) $(BISON_C) $(LEX_C) semantic.cpp symbol.cpp type.cpp 
 
 clean:
 	rm -f $(BISON_C) $(BISON_H) $(LEX_C) $(OUTPUT)

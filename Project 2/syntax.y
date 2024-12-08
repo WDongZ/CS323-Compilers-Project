@@ -46,7 +46,7 @@ int error=0;
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {parseProgram($$);std::cout << *$$ ;} }
+Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {parseProgram($$);} }
     ;
 ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList, @$.first_line);}
     | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}, @$.first_line); }

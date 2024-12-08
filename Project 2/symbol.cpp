@@ -46,6 +46,7 @@ void ScopeStack::remove(const std::string& name){
 
 Attribute* ScopeStack::lookup(const std::string& name)
 {
+    printStack();
     SymbolTable* current_scope = top;
     while (current_scope != nullptr) {
         Attribute* result = current_scope->lookup(name);
@@ -55,4 +56,19 @@ Attribute* ScopeStack::lookup(const std::string& name)
         current_scope = current_scope->parent;
     }
     return nullptr;
+}
+
+void ScopeStack::printStack() {
+    SymbolTable* current_scope = top;
+    int scope_level = 0;
+
+    while (current_scope != nullptr) {
+        std::cout << "Scope Level " << scope_level++ << ":\n";
+        for (const auto& pair : current_scope->table) {
+            std::cout << "  Name: " << pair.first 
+                      << ", Attribute: " 
+                      << "\n";
+        }
+        current_scope = current_scope->parent;
+    }
 }
