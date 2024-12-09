@@ -38,7 +38,7 @@ void parseExtDef(Node *ext_def) // 标记
     if (child->type == NodeType::ExtDecList)
     {
         Node *ext_dec_list = child;
-        Node *_SEMI = ext_dec_list->children[0];
+        Node *_SEMI = nullptr;
         parseExtDecList(ext_dec_list, attribute);
     }
     else if (child->type == NodeType::FunDec)
@@ -85,7 +85,7 @@ Attribute *parseSpecifier(Node *Specifier)
     }
     else if (node->type == NodeType::StructSpecifier)
     { // 如果节点类型是stuctSpecifier => STRUCT ID LC DefList RC || STRUCT ID
-        Node *_struct = node->children[0];
+        Node *_struct = nullptr;
         Node *struct_id = node->children[1];
         std::string struct_name = struct_id->getText();
 
@@ -97,9 +97,9 @@ Attribute *parseSpecifier(Node *Specifier)
                 return nullptr;
             }
 
-            Node *_LC = node->children[2];
+            Node *_LC = nullptr;
             Node *def_list = node->children[3];
-            Node *_RC = node->children[4];
+            Node *_RC = nullptr;
 
             ParamsList *params_ptr = parseDefList(def_list, nullptr);
             attribute = new Attribute(Category::STRUCTURE, params_ptr);
@@ -157,7 +157,7 @@ ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attr
     paramslist = parseDec(dec, paramslist, attribute);
     if (dec_list->children.size() != 1)
     {// Dec COMMA DecList
-        Node *_COMMA = dec_list->children[1];
+        Node *_COMMA = nullptr;
         Node *dec_list1 = dec_list->children[2];
         paramslist = parseDecList(dec_list1, paramslist, attribute);
     }
@@ -171,7 +171,7 @@ ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute)
     ParamsList *var_dec_fields = parseVarDec(var_dec, attribute);
     if (dec->children.size() != 1)
     {
-        Node *_ASSIGN = dec->children[1];
+        Node *_ASSIGN = nullptr;
         Node *exp = dec->children[2];
         Attribute *exp_attribute = parseExp(exp);
         if (!AttributeCompare(attribute, exp_attribute))
@@ -193,9 +193,9 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute)
     while (var_dec->children.size() == 4)
     {
         next_node = var_dec->children[0];
-        Node *LP = var_dec->children[1];
+        Node *LP = nullptr;
         Node *int_node = var_dec->children[2];
-        Node *RP = var_dec->children[3];
+        Node *RP = nullptr;
 
         Array *new_array = new Array(last_attribute, std::stoi(int_node->getText().substr(int_node->getText().find(":") + 2)));
         //std::cout << "stoi!!! :: " << std::stoi(int_node->getText().substr(int_node->getText().find(":") + 2)) << std::endl;
@@ -221,7 +221,7 @@ void parseVarList(Node *var_list, ParamsList *paramslist)
     paramslist = parseParamDec(param_dec, paramslist);
     if (var_list->children.size() != 1)
     {
-        Node *_COMMA = var_list->children[1];
+        Node *_COMMA = nullptr;
         Node *var_list1 = var_list->children[2];
         parseVarList(var_list1, paramslist);
     }
@@ -294,7 +294,7 @@ Attribute *parseExp(Node *exp)
             }
             else
             {
-                attribute == new Attribute(Category::PRIMITIVE, NodeType::Int);
+                attribute = new Attribute(Category::PRIMITIVE, NodeType::Int);
             }
         }
         else if (node1->type == NodeType::Minus)
@@ -305,7 +305,7 @@ Attribute *parseExp(Node *exp)
             }
             else
             {
-                attribute == exp_attribute;
+                attribute = exp_attribute;
             }
         }
     }
@@ -371,7 +371,7 @@ Attribute *parseExp(Node *exp)
         else if (node2->type == NodeType::Dot)
         {
             Node* exp1 = node1;
-            Node* member_id = node3;
+            Node* member_id = nullptr;
             Attribute *node1_attribute = parseExp(exp1);
             if (node1_attribute->category != Category::STRUCTURE)
             {
@@ -477,9 +477,9 @@ Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP 
         paramslist->next = nullptr;
     }else
     { // ID LP VarList RP
-        Node *_LP = fun_dec->children[1];
+        Node *_LP = nullptr;
         Node *var_list = fun_dec->children[2];
-        Node *_RP = fun_dec->children[3];
+        Node *_RP = nullptr;
         parseVarList(var_list, paramslist);
     }
     return ans_attribute;
@@ -488,10 +488,10 @@ Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP 
 void parseCompSt(Node *comp_st, Attribute *attribute) // LC DefList StmtList RC
 {
     printDebugMsg("compst");
-    Node *_LC = comp_st->children[0];
+    Node *_LC = nullptr;
     Node *def_list = comp_st->children[1];
     Node *stmt_list = comp_st->children[2];
-    Node *_RC = comp_st->children[3];
+    Node *_RC = nullptr;
     parseDefList(def_list, nullptr);
     parseStmtList(stmt_list, attribute);
 }
