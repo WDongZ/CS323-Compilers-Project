@@ -1,12 +1,18 @@
-int sum(int x, int y)
+struct Apple
 {
-  int res = x + y + z;
-  return res;
-}
-int test_2_r01()
+  int weight;
+  float round;
+  float price;
+};
+struct Apple
 {
-  int a1 = 1;
-  int b = a1 + a;
-  int b = sum(a, b);
+  int round;
+  float weight;
+  float price;
+};
+int test_2_r15()
+{
+  struct Apple aa;
+  aa.price = 2;
   return 0;
 }
