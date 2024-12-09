@@ -674,12 +674,12 @@ Attribute *checkAssign(Node *node1, Node *_ASSIGN, Node *node2)
     }
     if (!flag)
     {
-        std::cout << "Error type 6 at line " << node1->linec << ": rvalue appears on the left-side of assignment" << std::endl;
+        std::cout << "Error Type 6 at line " << node1->linec << ": rvalue appears on the left-side of assignment" << std::endl;
     }
     else if (!AttributeCompare(node1_attribute, node2_attribute))
     {
         if(!(node1_attribute == nullptr || node2_attribute == nullptr )){
-            std::cout << "ErrorType 5 at line " << node1->linec << ": unmatching type on both sides of assignment " << std::endl;
+            std::cout << "Error Type 5 at line " << node1->linec << ": unmatching type on both sides of assignment " << std::endl;
         }
         
     }
