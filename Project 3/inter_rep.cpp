@@ -751,6 +751,7 @@ int inter_exp(Node *node, bool single)
     // printf("Exp LP EXP RP\n");
         return inter_exp(node->children[1]);
     }
+    return -1;
 }
 
 /**
@@ -817,6 +818,7 @@ Attribute *checkType(Node *node)
     {
         return new Attribute(Category::PRIMITIVE, NodeType::Char);
     }
+    return nullptr;
 }
 
 int getIR(string name)
