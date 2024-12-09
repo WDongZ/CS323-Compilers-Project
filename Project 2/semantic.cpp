@@ -35,13 +35,13 @@ void parseExtDef(Node *ext_def) // 标记
     Attribute *attribute = parseSpecifier(specifier);
     Node *child = ext_def->children[1];
 
-    if (child->type == ExtDecList)
+    if (child->type == NodeType::ExtDecList)
     {
         Node *ext_dec_list = child;
         Node *_SEMI = ext_dec_list->children[0];
         parseExtDecList(ext_dec_list, attribute);
     }
-    else if (child->type == FunDec)
+    else if (child->type == NodeType::FunDec)
     {
         Node *fun_dec = child;
         Node *comp_st = ext_def->children[2];
@@ -50,9 +50,9 @@ void parseExtDef(Node *ext_def) // 标记
         if (fun_dec_attribute != nullptr)
         {
             std::string func_name = fun_dec_attribute->params_ptr->name;
-            if (stack->lookup(func_name))
+            if (stack->lookup(func_name) != nullptr)
             {
-                std::cout << "Error type 4 at line " << fun_dec->linec << ": redefine function: " << func_name << std::endl;
+                std::cout << "Error type 4 at line " << fun_dec->linec << ": function " << func_name << " is redefined" << std::endl;
             }
             else
             {
@@ -93,7 +93,7 @@ Attribute *parseSpecifier(Node *Specifier)
         { // STRUCT ID LC DefList RC
             if (stack->lookup(struct_name) != nullptr)
             {
-                std::cout << "Error type 15 at line " << struct_id->linec << ": redefine struct: " << struct_name << std::endl;
+                std::cout << "Error type 15 at line " << struct_id->linec << ": redefine the same structure type: " << struct_name << std::endl;
                 return nullptr;
             }
 
@@ -109,12 +109,9 @@ Attribute *parseSpecifier(Node *Specifier)
         { // STRUCT ID
             if (stack->lookup(struct_name) == nullptr)
             {
-                std::cout << "Error type 3 at line " << struct_id->linec << ": redefine variable: " << struct_name << std::endl; // 使用一个struct，但是并不存在这个struct
+                std::cout << "Error type 3 at line " << struct_id->linec << ": variable " << struct_name << "is redefined in the same scope " << std::endl; // 使用一个struct，但是并不存在这个struct
                 return nullptr;
             }
-            // if(stack->lookup(struct_name)->category != Category::STRUCTURE){
-            //     std::cout << "Error type 3 at line " << struct_id->linec << ": redefine variable: " << struct_name << std::endl; //使用一个struct，标准存在这个名称，但是这个名称并不是一个struct
-            // } 删除
             attribute = stack->top->lookup(struct_name);
         }
     }
@@ -159,7 +156,7 @@ ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attr
     Node *dec = dec_list->children[0];
     paramslist = parseDec(dec, paramslist, attribute);
     if (dec_list->children.size() != 1)
-    {
+    {// Dec COMMA DecList
         Node *_COMMA = dec_list->children[1];
         Node *dec_list1 = dec_list->children[2];
         paramslist = parseDecList(dec_list1, paramslist, attribute);
@@ -167,8 +164,8 @@ ParamsList *parseDecList(Node *dec_list, ParamsList *paramslist, Attribute *attr
     return paramslist;
 }
 
-ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) // Dec -> VarDec | Dec -> VarDec ASSIGN Exp
-{
+ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) 
+{// Dec -> VarDec | Dec -> VarDec ASSIGN Exp
     printDebugMsg("dec");
     Node *var_dec = dec->children[0];
     ParamsList *var_dec_fields = parseVarDec(var_dec, attribute);
@@ -179,14 +176,17 @@ ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute) //
         Attribute *exp_attribute = parseExp(exp);
         if (!AttributeCompare(attribute, exp_attribute))
         {
-            std::cout << "Error type 5 at line " << var_dec->linec << ": unmatching type on both sides of assignment " << std::endl;
+            if(!(attribute == nullptr || exp_attribute == nullptr )){
+                std::cout << "Error type 5 at line " << var_dec->linec << ": unmatching type on both sides of assignment " << std::endl;
+            }
+            
         }
     }
     return var_dec_fields;
 }
 
-ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | VarDec -> ID LP VarList RP
-{
+ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) 
+{// VarDec->ID | VarDec -> VarDec LP VarList RP
     printDebugMsg("vardec");
     Attribute *last_attribute = attribute;
     Node *next_node = nullptr;
@@ -197,7 +197,9 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | Var
         Node *int_node = var_dec->children[2];
         Node *RP = var_dec->children[3];
 
-        Array *new_array = new Array(last_attribute, std::stoi(int_node->getText().substr(int_node->getText().find(":") + 2))); // 标记
+        Array *new_array = new Array(last_attribute, std::stoi(int_node->getText().substr(int_node->getText().find(":") + 2)));
+        //std::cout << "stoi!!! :: " << std::stoi(int_node->getText().substr(int_node->getText().find(":") + 2)) << std::endl;
+        //stack->printStack();
         Attribute *new_attribute = new Attribute(Category::ARRAY, new_array);
         last_attribute = new_attribute;
         var_dec = next_node; //
@@ -206,14 +208,14 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute) // VarDec->ID | Var
     ParamsList *result = new ParamsList(id->getText(), last_attribute, nullptr);
     if (stack->lookup(result->name) != nullptr)
     {
-        std::cout << "Error type 3 at line " << id->linec << ": redefine variable: " << result->name << std::endl;
+        std::cout << "Error type 3 at line " << id->linec << ": rvariable " << result->name << "is redefined in the same scope" << std::endl;
     }
     stack->top->insert(result->name, last_attribute);
     return result;
 }
 
-void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec COMMA VarList | VarList -> ParamDec
-{
+void parseVarList(Node *var_list, ParamsList *paramslist) 
+{// VarList -> ParamDec COMMA VarList | VarList -> ParamDec
     printDebugMsg("varlist");
     Node *param_dec = var_list->children[0];
     paramslist = parseParamDec(param_dec, paramslist);
@@ -225,8 +227,8 @@ void parseVarList(Node *var_list, ParamsList *paramslist) // VarList -> ParamDec
     }
 }
 
-ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) // ParamDec -> Specifier VarDec
-{
+ParamsList *parseParamDec(Node *param_dec, ParamsList *paramslist) 
+{// ParamDec -> Specifier VarDec
     printDebugMsg("paramDec");
     Node *specifier = param_dec->children[0];
     Attribute *specifier_attribute = parseSpecifier(specifier);
@@ -245,13 +247,14 @@ Attribute *parseExp(Node *exp)
     printDebugMsg("exp");
     Attribute *attribute = nullptr;
     if (exp->children.size() == 1)
-    {
+    { // ID | CHAR | FLOAT | INT
         Node *node1 = exp->children[0];
+        //std::cout << "msg about node1" << node1->getText()<< std::endl;
         if (node1->type == NodeType::Id)
         {
             if (stack->lookup(node1->getText()) == nullptr)
             {
-                std::cout << "Error type 1 at line " << node1->linec << ": undefined variable: " << node1->getText() << std::endl;
+                std::cout << "Error type 1 at line " << node1->linec << ": " << node1->getText() << "is used without a definition" << std::endl;
             }
             else
             {
@@ -284,7 +287,7 @@ Attribute *parseExp(Node *exp)
         {
             if (!(exp_attribute->category == Category::PRIMITIVE && exp_attribute->nodetype == NodeType::Int))
             {
-                std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
+                std::cout << "Error type 7 at line " << node1->linec << ": unmatching operand " << std::endl;
             }
             else
             {
@@ -295,7 +298,7 @@ Attribute *parseExp(Node *exp)
         {
             if (exp_attribute->category != Category::PRIMITIVE || exp_attribute->nodetype == NodeType::Char)
             {
-                std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
+                std::cout << "Error type 7 at line " << node1->linec << ": unmatching operand " << std::endl;
             }
             else
             {
@@ -319,23 +322,26 @@ Attribute *parseExp(Node *exp)
             Node* exp1 = node1;
             Node* exp2 = node3;
 
-            if(exp1 != nullptr){
-                std::cout <<  type_to_string(exp1->type) <<std::endl;
-            }
-            
-            if(exp2!=nullptr){
-                std::cout << exp2->getText() << std::endl;
-            }
             
 
             Attribute *node1_attribute = parseExp(exp1);
             Attribute *node2_attribute = parseExp(exp2);
 
 
+            // if(node1_attribute != nullptr){
+            //     std::cout <<  type_to_string(node1_attribute->nodetype) << "  ";
+            // }
+            
+            // if(node2_attribute !=nullptr){
+            //     std::cout << type_to_string(node2_attribute->nodetype) << std::endl;
+            // }
+
 
             if (!AttributeCompare(node1_attribute, node2_attribute) || node1_attribute->category != Category::PRIMITIVE)
             {
-                std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
+                if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
+                    std::cout << "Error type 7 at line " << node1->linec << ": Unmatching operand " << std::endl;
+                }
             }
             else
             {
@@ -350,8 +356,9 @@ Attribute *parseExp(Node *exp)
             Attribute *node2_attribute = parseExp(exp2);
             if (!AttributeCompare(node1_attribute, node2_attribute) || !(node1_attribute->category == Category::PRIMITIVE && node1_attribute->nodetype == NodeType::Int))
             {
-                std::cout << node1_attribute->nodetype << "   ----   " << node2_attribute->nodetype << std::endl;
-                std::cout << "Error type 7 at line " << node1->linec << ": binary operation on non-number variables " << std::endl;
+                if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
+                    std::cout << "Error type 7 at line " << node1->linec << ": unmatching operand " << std::endl;
+                }
             }
             else
             {
@@ -377,7 +384,7 @@ Attribute *parseExp(Node *exp)
                 }
                 if (paramslist == nullptr)
                 {
-                    std::cout << "Error type 14 at line " << node1->linec << ": no such member: " << node3->getText() << std::endl;
+                    std::cout << "Error type 14 at line " << node1->linec << ": accessing an undefined structure member: " << node3->getText() << std::endl;
                 }
                 else
                 {
@@ -393,7 +400,7 @@ Attribute *parseExp(Node *exp)
         {
             if (stack->lookup(node1->getText()) == nullptr)
             {
-                std::cout << "Error type 2 at line " << node1->linec << ": undefined function: " << node1->getText() << std::endl;
+                std::cout << "Error type 2 at line " << node1->linec << ": " << node1->getText() << "is invoked without a definition" << std::endl;
                 return nullptr;
             }
             else if (stack->lookup(node1->getText())->category != Category::FUNCTION)
@@ -408,7 +415,7 @@ Attribute *parseExp(Node *exp)
             }
             else
             {
-                std::cout << "Error type 9 at line " << node1->linec << ": invalid argument number for compares, " << node1->getText() << std::endl;
+                std::cout << "Error type 9 at line " << node1->linec << ": invalid argument number" << node1->getText() << std::endl;
             }
         }
     }
@@ -422,7 +429,7 @@ Attribute *parseExp(Node *exp)
         {
             if (stack->lookup(node1->getText()) == nullptr)
             {
-                std::cout << "Error type 2 at line " << node1->linec << ": undefined function: " << node1->getText() << std::endl;
+                std::cout << "Error type 2 at line " << node1->linec << ": " << node1->getText() << " is invoked without a definition"<< std::endl;
                 return nullptr;
             }
             else if (stack->lookup(node1->getText())->category != Category::FUNCTION)
@@ -443,7 +450,7 @@ Attribute *parseExp(Node *exp)
             {
                 std::cout << "Error type 10 at line " << node1->linec << ": indexing on non-array variable " << std::endl;
             }
-            else if (!(node3_attribute->category == Category::PRIMITIVE && node1_attribute->nodetype == NodeType::Int))
+            else if (!(node3_attribute->category == Category::PRIMITIVE && node3_attribute->nodetype == NodeType::Int))
             {
                 std::cout << "Error type 12 at line " << node1->linec << ": indexing by non-integer " << std::endl;
                 attribute = node1_attribute->array_ptr->base;
@@ -463,10 +470,10 @@ Attribute *parseFunDec(Node *fun_dec, Attribute *attribute) // ID LP VarList RP 
     Node *func_id = fun_dec->children[0];
     ParamsList *paramslist = new ParamsList(func_id->getText(), attribute, nullptr);
     Attribute *ans_attribute = new Attribute(Category::FUNCTION, paramslist);
-    if (fun_dec->children.size() == 3){
+    if (fun_dec->children.size() == 3){ // ID LP RP
         paramslist->next = nullptr;
     }else
-    {
+    { // ID LP VarList RP
         Node *_LP = fun_dec->children[1];
         Node *var_list = fun_dec->children[2];
         Node *_RP = fun_dec->children[3];
@@ -502,11 +509,12 @@ void parseStmt(Node *stmt, Attribute *attribute)
 {
     printDebugMsg("stmt");
     Node *node1 = stmt->children[0];
-    if (node1->type == NodeType::Exp)
+    //stack->printStack();
+    if (node1->type == NodeType::Exp) // Exp SEMI
     {
         parseExp(node1);
     }
-    else if (node1->type == NodeType::CompSt)
+    else if (node1->type == NodeType::CompSt) //CompSt 
     {
         parseCompSt(node1, attribute);
     }
@@ -530,16 +538,16 @@ void parseStmt(Node *stmt, Attribute *attribute)
         {
             if (!(exp_attribute->category == Category::PRIMITIVE && exp_attribute->nodetype == NodeType::Int))
             {
-                std::cout << exp_attribute->nodetype << std::endl;
-                std::cout << "Error type 7 at line " << exp->linec << ": binary operation on non-number variables" << std::endl;
+                //std::cout << exp_attribute->nodetype << std::endl;
+                std::cout << "Error type 7 at line " << exp->linec << ": unmatching operand" << std::endl;
             }
             else
             {
                 parseStmt(stmt1, attribute);
                 if (stmt->children.size() == 7)
                 { // if lp exp rp stmt else stmt
-                    Node *_ELSE = stmt->children[6];
-                    Node *stmt2 = stmt->children[7];
+                    Node *_ELSE = stmt->children[5];
+                    Node *stmt2 = stmt->children[6];
                     parseStmt(stmt2, attribute);
                 }
             }
@@ -552,8 +560,8 @@ void parseStmt(Node *stmt, Attribute *attribute)
         Attribute* exp_attribute = parseExp(exp);
         if(exp_attribute != nullptr) {
             if(!(exp_attribute->category == Category::PRIMITIVE && exp_attribute->nodetype == NodeType::Int)){
-                std::cout << exp_attribute->nodetype;
-                std::cout << "Error type 7 at line " << exp->linec << ": binary operation on non-number variables" << std::endl;
+                //std::cout << exp_attribute->nodetype;
+                std::cout << "Error type 7 at line " << exp->linec << ": unmatching operand" << std::endl;
             }else {
                 Node* _RP = stmt->children[3];
                 Node* stmt1 = stmt->children[4];
@@ -563,8 +571,8 @@ void parseStmt(Node *stmt, Attribute *attribute)
     }
 }
 
-void parseExtDecList(Node *ext_dec_list, Attribute *attribute) // ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
-{
+void parseExtDecList(Node *ext_dec_list, Attribute *attribute) 
+{// ExtDecList -> VarDec | ExtDecList -> VarDec COMMA ExtDecList
     printDebugMsg("ExtDecList");
     Node* var_dec = ext_dec_list->children[0];
     parseVarDec(var_dec, attribute);
@@ -581,7 +589,8 @@ Attribute *checkArgs(Node *node1, Attribute *func_type, Node *node2)
     Attribute *attribute = nullptr;
     if (args == nullptr)
     {
-        std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number for compare, " << node2->getText() << std::endl;
+        std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number" << node2->getText() << std::endl;
+        return attribute;
     }
     Node *exp = node1->children[0];
     while (true)
@@ -591,22 +600,23 @@ Attribute *checkArgs(Node *node1, Attribute *func_type, Node *node2)
         {
             if (!AttributeCompare(exp_attribute, args->global_type))
             {
-                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number for compare, " << node2->getText() << std::endl;
+                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number" << node2->getText() << std::endl;
                 break;
             }
-            else if (args == nullptr && node1->children.size() == 1)
+            args = args->next;
+            if (args == nullptr && node1->children.size() == 1)
             {
                 attribute = func_type->params_ptr->global_type;
                 break;
             }
-            else if (args != nullptr && node1->children.size() == 1)
+            if (args != nullptr && node1->children.size() == 1)
             {
-                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number for compare, " << node2->getText() << std::endl;
+                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number" << node2->getText() << std::endl;
                 break;
             }
-            else if (args == nullptr && node1->children.size() != 1)
+            if (args == nullptr && node1->children.size() != 1)
             {
-                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number for compare, " << node2->getText() << std::endl;
+                std::cout << "Error type 9 at line " << node2->linec << ": invalid argument number" << node2->getText() << std::endl;
                 break;
             }
             Node *_COMMA = node1->children[1];
@@ -661,16 +671,17 @@ Attribute *checkAssign(Node *node1, Node *_ASSIGN, Node *node2)
         }
         break;
     }
-    default:
-        break;
     }
     if (!flag)
     {
-        std::cout << "Error type 6 at line " << node1->linec << ": left side in assignment is rvalue " << std::endl;
+        std::cout << "Error type 6 at line " << node1->linec << ": rvalue appears on the left-side of assignment" << std::endl;
     }
     else if (!AttributeCompare(node1_attribute, node2_attribute))
     {
-        std::cout << "Error type 5 at line " << node1->linec << ": unmatching type on both sides of assignment " << std::endl;
+        if(!(node1_attribute == nullptr || node2_attribute == nullptr )){
+            std::cout << "ErrorType 5 at line " << node1->linec << ": unmatching type on both sides of assignment " << std::endl;
+        }
+        
     }
     else
     {
