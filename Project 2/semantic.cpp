@@ -176,9 +176,9 @@ ParamsList *parseDec(Node *dec, ParamsList *paramslist, Attribute *attribute)
         Attribute *exp_attribute = parseExp(exp);
         if (!AttributeCompare(attribute, exp_attribute))
         {
-            if(!(attribute == nullptr || exp_attribute == nullptr )){
+            //if(!(attribute == nullptr || exp_attribute == nullptr )){
                 std::cout << "Error type 5 at line " << var_dec->linec << ": unmatching type on both sides of assignment " << std::endl;
-            }
+            //}
             
         }
     }
@@ -254,7 +254,7 @@ Attribute *parseExp(Node *exp)
         {
             if (stack->lookup(node1->getText()) == nullptr)
             {
-                std::cout << "Error type 1 at line " << node1->linec << ": " << node1->getText() << "is used without a definition" << std::endl;
+                std::cout << "Error type 1 at line " << node1->linec << ": " << node1->getText() << " is used without a definition" << std::endl;
             }
             else
             {
@@ -272,6 +272,9 @@ Attribute *parseExp(Node *exp)
         else if (node1->type == NodeType::Char)
         {
             return new Attribute(Category::PRIMITIVE, NodeType::Char);
+        }
+        else if(node1->type == NodeType::Exp){
+            return parseExp(node1);
         }
         else
         {
@@ -339,9 +342,9 @@ Attribute *parseExp(Node *exp)
 
             if (!AttributeCompare(node1_attribute, node2_attribute) || node1_attribute->category != Category::PRIMITIVE)
             {
-                if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
+                //if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
                     std::cout << "Error type 7 at line " << node1->linec << ": Unmatching operand " << std::endl;
-                }
+                //}
             }
             else
             {
@@ -356,9 +359,9 @@ Attribute *parseExp(Node *exp)
             Attribute *node2_attribute = parseExp(exp2);
             if (!AttributeCompare(node1_attribute, node2_attribute) || !(node1_attribute->category == Category::PRIMITIVE && node1_attribute->nodetype == NodeType::Int))
             {
-                if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
+                //if(!(node1_attribute == nullptr || node2_attribute == nullptr)){
                     std::cout << "Error type 7 at line " << node1->linec << ": unmatching operand " << std::endl;
-                }
+                //}
             }
             else
             {
@@ -419,7 +422,7 @@ Attribute *parseExp(Node *exp)
             }
         }
     }
-    else if (exp->children.size() == 4)
+    else if (exp->children.size() == 4) // id lp args rp
     {
         Node *node1 = exp->children[0];
         Node *node2 = exp->children[1];
@@ -595,7 +598,7 @@ Attribute *checkArgs(Node *node1, Attribute *func_type, Node *node2)
     Node *exp = node1->children[0];
     while (true)
     {
-        Attribute *exp_attribute = parseExp(node1);
+        Attribute *exp_attribute = parseExp(exp);
         if (exp_attribute != nullptr)
         {
             if (!AttributeCompare(exp_attribute, args->global_type))
@@ -678,9 +681,9 @@ Attribute *checkAssign(Node *node1, Node *_ASSIGN, Node *node2)
     }
     else if (!AttributeCompare(node1_attribute, node2_attribute))
     {
-        if(!(node1_attribute == nullptr || node2_attribute == nullptr )){
+        //if(!(node1_attribute == nullptr || node2_attribute == nullptr )){
             std::cout << "Error Type 5 at line " << node1->linec << ": unmatching type on both sides of assignment " << std::endl;
-        }
+        //}
         
     }
     else
