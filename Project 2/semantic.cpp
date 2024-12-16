@@ -10,7 +10,7 @@ void printDebugMsg(const std::string& msg){
 
 void parseProgram(Node *program)
 {
-    printDebugMsg("parseprogram done");
+    printDebugMsg("parseprogram");
     stack = new ScopeStack(nullptr);
     stack->pushScope();
     parseExtDefList(program->children[0]);
@@ -43,6 +43,7 @@ void parseExtDef(Node *ext_def) // 标记
     }
     else if (child->type == NodeType::FunDec)
     {
+        stack->pushScope();
         Node *fun_dec = child;
         Node *comp_st = ext_def->children[2];
         Attribute *fun_dec_attribute = parseFunDec(fun_dec, attribute);
@@ -53,11 +54,13 @@ void parseExtDef(Node *ext_def) // 标记
             if (stack->lookup(func_name) != nullptr)
             {
                 std::cout << "Error type 4 at line " << fun_dec->linec << ": function " << func_name << " is redefined" << std::endl;
+                stack->popScope();
             }
             else
             {
-                stack->insert(func_name, fun_dec_attribute);
+                stack->insertToRoot(func_name, fun_dec_attribute);
                 parseCompSt(comp_st, attribute);
+                stack->popScope();
             }
         }
     }
@@ -100,8 +103,9 @@ Attribute *parseSpecifier(Node *Specifier)
             Node *_LC = nullptr;
             Node *def_list = node->children[3];
             Node *_RC = nullptr;
-
+            stack->pushScope();
             ParamsList *params_ptr = parseDefList(def_list, nullptr);
+            stack->popScope();
             attribute = new Attribute(Category::STRUCTURE, params_ptr);
             stack->insert(struct_name, attribute);
         }
@@ -210,7 +214,7 @@ ParamsList *parseVarDec(Node *var_dec, Attribute *attribute)
     {
         std::cout << "Error type 3 at line " << id->linec << ": rvariable " << result->name << "is redefined in the same scope" << std::endl;
     }
-    stack->top->insert(result->name, last_attribute);
+    stack->insert(result->name, last_attribute);
     return result;
 }
 
@@ -525,6 +529,7 @@ void parseStmt(Node *stmt, Attribute *attribute)
     {
         Node *exp = stmt->children[1];
         Attribute *exp_attribute = parseExp(exp);
+        printDebugMsg("-------------------------------->");
         if (exp_attribute != nullptr && !AttributeCompare(attribute, exp_attribute))
         {
             std::cout << "Error type 8 at line " << node1->linec << ": icompatiable return type " << std::endl;
@@ -546,12 +551,16 @@ void parseStmt(Node *stmt, Attribute *attribute)
             }
             else
             {
+                stack->pushScope();
                 parseStmt(stmt1, attribute);
+                stack->popScope();
                 if (stmt->children.size() == 7)
                 { // if lp exp rp stmt else stmt
+                    stack->pushScope();
                     Node *_ELSE = stmt->children[5];
                     Node *stmt2 = stmt->children[6];
                     parseStmt(stmt2, attribute);
+                    stack->popScope();
                 }
             }
         }
@@ -568,7 +577,9 @@ void parseStmt(Node *stmt, Attribute *attribute)
             }else {
                 Node* _RP = stmt->children[3];
                 Node* stmt1 = stmt->children[4];
+                stack->pushScope();
                 parseStmt(stmt1, attribute);
+                stack->popScope();
             }
         }
     }
