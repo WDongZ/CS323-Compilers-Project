@@ -30,6 +30,7 @@ public:
     void popScope();
     void pushScope();
     void insert(const std::string& name, Attribute* attribute);
+    void insertToRoot(const std::string& name, Attribute* attribute);
     Attribute* lookup(const std::string& name);
     void remove(const std::string& name);
     void printStack();

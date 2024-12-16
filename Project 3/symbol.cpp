@@ -39,7 +39,15 @@ void ScopeStack::pushScope(){
 
 void ScopeStack::insert(const std::string& name, Attribute* attribute){
     top->insert(name, attribute);
+    //printStack();
+}
 
+void ScopeStack::insertToRoot(const std::string& name, Attribute* attribute){
+    SymbolTable* currentTable = top;
+    if(currentTable->parent != nullptr ){
+        currentTable = currentTable->parent;
+    }
+    currentTable->insert(name, attribute);
 }
 
 void ScopeStack::remove(const std::string& name){
@@ -65,12 +73,13 @@ void ScopeStack::printStack() {
     int scope_level = 0;
 
     while (current_scope != nullptr) {
-        std::cout << "Scope Level " << scope_level++ << ":\n";
+        std::cout << "                                 "<< "Scope Level " << scope_level++ << ":\n";
         for (const auto& pair : current_scope->table) {
-            std::cout << "  Name: " << pair.first 
+            std::cout << "                                 "<< "  Name: " << pair.first 
                       << ", Attribute: " 
-                      << "\n";
+                      << "\n" ;
         }
         current_scope = current_scope->parent;
     }
+    std::cout << std::endl;
 }
