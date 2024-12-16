@@ -1,12 +1,10 @@
 int sum(int x, int y)
 {
-  int res = x + y + z;
+  int res = x + y;
   return res;
 }
-int test_2_r01()
+float sum(int x, int y)
 {
-  int a1 = 1;
-  int b = a1 + a;
-  int b = sum(a, b);
-  return 0;
+  int res = x + y;
+  return res;
 }
