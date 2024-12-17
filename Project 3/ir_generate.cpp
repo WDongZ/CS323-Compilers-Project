@@ -1,4 +1,4 @@
-#include "inter_rep.hpp"
+#include "ir_generate.hpp"
 #include <typeinfo>
 #include <assert.h>
 vector<TAC *> tac_vector;
