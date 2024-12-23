@@ -144,6 +144,12 @@ namespace tac
         Return(VarableAddress value) : TAC(std::string("RETURN")), value(value) {}
         std::string to_string() const override;
     };
+    class Param: public TAC {
+    public:
+        VarableAddress var;
+        Param(VarableAddress var) : TAC(std::string("PARAM")), var(var) {}
+        std::string to_string() const override;
+    };
     class Arg: public TAC {
     public:
         VarableAddress right;

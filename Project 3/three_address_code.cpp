@@ -143,6 +143,13 @@ std::string tac::Return::to_string() const
     std::string message = ss.str();
     return message;
 }
+// param指令
+std::string tac::Param::to_string() const
+{
+    std::stringstream ss;
+    ss << "PARAM " << var;
+    return std::string();
+}
 // arg指令
 std::string tac::Arg::to_string() const
 {
