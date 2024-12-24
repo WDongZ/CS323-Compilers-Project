@@ -22,25 +22,6 @@ namespace tac
     };
 
     std::ostream& operator<<(std::ostream& os, const Operator& op);
-    // 变量管理类，用于保存变量的地址和类型
-    class VarableAddress {
-        public:
-        // 分别表示临时变量、变量、常量
-        enum class Type {
-            TEMP,
-            VAR,
-            CONSTANT
-        };
-        // 保存不同类型的变量数量,用于生成唯一的变量地址
-        static std::unordered_map<Type, int> varable_count;
-        int value;
-        Type type;
-        // 常量
-        VarableAddress(int value) : type(Type::CONSTANT),value(value) {}
-        // 临时变量和变量的构造函数，根据类型从varable_count中获取当前的数量
-        VarableAddress(Type type);
-    };
-    std::ostream& operator<<(std::ostream& os, const VarableAddress& address);
 
     // TAC指令基类
     class TAC
@@ -59,7 +40,25 @@ namespace tac
     void add_tac(TAC *tac);
 
     std::ostream& operator<<(std::ostream& os, const TAC& tac);
-
+    // 变量管理类，用于保存变量的地址和类型
+    class VarableAddress: public TAC {
+        public:
+        // 分别表示临时变量、变量、常量
+        enum class Type {
+            TEMP,
+            VAR,
+            CONSTANT
+        };
+        // 保存不同类型的变量数量,用于生成唯一的变量地址
+        static std::unordered_map<Type, int> varable_count;
+        int value;
+        Type type;
+        // 常量
+        VarableAddress(int value): TAC(std::string("Variable")),type(Type::CONSTANT),value(value) {}
+        // 临时变量和变量的构造函数，根据类型从varable_count中获取当前的数量
+        VarableAddress(Type type);
+        std::string to_string() const override;
+    };
     class Label : public TAC {
     public:
         int labeladdress;

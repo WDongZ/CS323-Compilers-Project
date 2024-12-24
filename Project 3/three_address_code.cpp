@@ -26,22 +26,23 @@ void tac::add_tac(TAC *tac)
 }
 // 静态变量，保存不同类型的变量数量
 std::unordered_map<tac::VarableAddress::Type, int> tac::VarableAddress::varable_count;
-tac::VarableAddress::VarableAddress(Type type) : type(type)
+tac::VarableAddress::VarableAddress(Type type) : TAC(std::string("Variable")), type(type)
 {
     value = ++varable_count[type];
 }
 // 重载输出流,输出VarableAddress
-std::ostream& tac::operator<<(std::ostream& os, const VarableAddress& address)
+std::string tac::VarableAddress::to_string() const
 {
-    switch (address.type)
+    std::stringstream ss;
+    switch (type)
     {
-        case tac::VarableAddress::Type::TEMP: os << "t"; break;
-        case tac::VarableAddress::Type::VAR: os << "v"; break;
-        case tac::VarableAddress::Type::CONSTANT: os << "#"; break;
-        default: os << "unknown variable address"; break;
+        case Type::TEMP: ss << "t"; break;
+        case Type::VAR: ss << "v"; break;
+        case Type::CONSTANT: ss << "#"; break;
+        default: ss << "unknown variable address"; break;
     }
-    os << address.value;
-    return os;
+    ss << value;
+    return ss.str();
 }
 // 重载输出流,调用to_string()来输出
 std::ostream &tac::operator<<(std::ostream& os, const TAC& tac)
@@ -63,7 +64,7 @@ std::string tac::Label::to_string() const
 std::string tac::Dec::to_string() const
 {
     std::stringstream ss;
-    ss << "DEC " << var;
+    ss << "DEC " << * var;
     for (int size : sizes)
     {
         ss << "[" << size << "]";
@@ -83,7 +84,7 @@ std::string tac::Function::to_string() const
 std::string tac::Assign::to_string() const
 {
     std::stringstream ss;
-    ss << left << " := " << right;
+    ss << * left << " := " << *right;
     std::string message = ss.str();
     return message;
 }
@@ -91,7 +92,7 @@ std::string tac::Assign::to_string() const
 std::string tac::AssignAddr::to_string() const
 {
     std::stringstream ss;
-    ss << left << " := &" << right;
+    ss << *left << " := &" << *right;
     std::string message = ss.str();
     return message;
 }
@@ -99,7 +100,7 @@ std::string tac::AssignAddr::to_string() const
 std::string tac::AssignVal::to_string() const
 {
     std::stringstream ss;
-    ss << left << " := *" << right;
+    ss << * left << " := *" << * right;
     std::string message = ss.str();
     return message;
 }
@@ -107,7 +108,7 @@ std::string tac::AssignVal::to_string() const
 std::string tac::Copy::to_string() const
 {
     std::stringstream ss;
-    ss << "*" << left << " := " << right;
+    ss << "*" << * left << " := " << * right;
     std::string message = ss.str();
     return message;
 }
@@ -115,7 +116,7 @@ std::string tac::Copy::to_string() const
 std::string tac::Arithmetic::to_string() const
 {
     std::stringstream ss;
-    ss << result << " := " << op_left << " " << op << " " << op_right;
+    ss << * result << " := " << * op_left << " " << op << " " << * op_right;
     std::string message = ss.str();
     return message;
 }
@@ -131,7 +132,7 @@ std::string tac::Goto::to_string() const
 std::string tac::If::to_string() const
 {
     std::stringstream ss;
-    ss << "IF " << left << " " << op << " " << right << " GOTO label" << label->labeladdress;
+    ss << "IF " << * left << " " << op << " " << * right << " GOTO label" << label->labeladdress;
     std::string message = ss.str();
     return message;
 }
@@ -139,7 +140,7 @@ std::string tac::If::to_string() const
 std::string tac::Return::to_string() const
 {
     std::stringstream ss;
-    ss << "RETURN " << value;
+    ss << "RETURN " << * value;
     std::string message = ss.str();
     return message;
 }
@@ -147,14 +148,14 @@ std::string tac::Return::to_string() const
 std::string tac::Param::to_string() const
 {
     std::stringstream ss;
-    ss << "PARAM " << var;
+    ss << "PARAM " << * var;
     return std::string();
 }
 // arg指令
 std::string tac::Arg::to_string() const
 {
     std::stringstream ss;
-    ss << "ARG " << right;
+    ss << "ARG " << * right;
     std::string message = ss.str();
     return message;
 }
@@ -162,7 +163,7 @@ std::string tac::Arg::to_string() const
 std::string tac::Call::to_string() const
 {
     std::stringstream ss;
-    ss << "t" << result << " := CALL " << function->name;
+    ss << * result << " := CALL " << function->name;
     std::string message = ss.str();
     return message;
 }
@@ -170,7 +171,7 @@ std::string tac::Call::to_string() const
 std::string tac::Read::to_string() const
 {
     std::stringstream ss;
-    ss << "READ " << var;
+    ss << "READ " << * var;
     std::string message = ss.str();
     return message;
 }
@@ -178,13 +179,14 @@ std::string tac::Read::to_string() const
 std::string tac::Write::to_string() const
 {
     std::stringstream ss;
-    ss << "WRITE " << var;
+    ss << "WRITE " << * var;
     std::string message = ss.str();
     return message;
 }
-// int main () {
-//     // test Assign
-    
-//     tac::Assign assign(tac::VarableAddress::Type::TEMP, tac::VarableAddress::Type::VAR);
-//     std::cout << assign << std::endl;
-// }
+int main () {
+    // test Assign
+    tac::VarableAddress * left = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
+    tac::VarableAddress * right = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
+    tac::Assign assign(left, right);
+    std::cout << assign << std::endl;
+}
