@@ -30,6 +30,7 @@ int error=0;
 %token<node> ID INTEGER FLOAT CHAR
 %token<node> SINGLE_LINE_COMMENT MULTI_LINE_COMMENT
 %type<node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args Var
+%token<node> WRITE READ
 %left INVALID
 %right ASSIGN
 %left OR
@@ -134,6 +135,7 @@ Stmt : SEMI                                     { $$ = Node::makeNode(NodeType::
     | WHILE LP Exp error Stmt                   { $$ = Node::makeNode(NodeType::Stmt, @$.first_line); error=1;  yyerror("Type B,Missing closing parenthesis \')\' at line " + std::to_string(@$.first_line)); }
     | ELSE Stmt { $$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Expected \'if\' before \'else\' at line " + std::to_string(@$.first_line)); }
     | ASSIGN error{$$ = Node::makeNode(NodeType::Stmt, @$.first_line);error=1;  yyerror("Type B,Unexpected statement at line "+std::to_string(@$.first_line)); }
+    | WRITE LP Exp RP SEMI {$$ = Node::makeNode(NodeType::Stmt,{$1,$2,$3,$4,$5} ,@$.first_line);}
     ;
 
 /* local definition */
@@ -194,6 +196,7 @@ Exp : Exp ASSIGN Exp    { $$ = Node::makeNode(NodeType::Exp,{$1,$2,$3}, @$.first
     | ID LP Args error  {$$ = Node::makeNode(NodeType::Exp, @$.first_line); error=1;  yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
     | ID LP error       { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;   yyerror("Missing closing parenthesis \')\'at line " + std::to_string(@$.first_line));}
     | Exp LB Exp error  { $$ = Node::makeNode(NodeType::Exp, @$.first_line);error=1;  yyerror("Type B,Missing closing braces \']\'at line " + std::to_string(@$.first_line));}
+    | READ LP RP {$$ = Node::makeNode(NodeType::Exp, {$1,$2,$3},@$.first_line);}
     ;
 
 Args : Exp COMMA Args   { $$ = Node::makeNode(NodeType::Args,{$1,$2,$3}, @$.first_line);}
