@@ -1,11 +1,8 @@
 #include "ir_generate.hpp"
 #include <typeinfo>
-#include <assert.h>
-#include <string>
+#include <cassert>
 
-using namespace tac;
-using namespace std;
-unordered_map<string, VarableAddress*> table;
+std::unordered_map<std::string, tac::VarableAddress*> table;
 /**
  * Program: ExtDefList
  */
@@ -15,9 +12,9 @@ void inter_program(Node *root)
 
     inter_extDefList(root->children[0]);
 
-    for (int i = 1; i < TAC::tac_list.size(); ++i)
+    for (int i = 1; i < tac::TAC::tac_list.size(); ++i)
     {
-        cout << TAC::tac_list[i] << endl;
+        std::cout << tac::TAC::tac_list[i] << std::endl;
     }
 }
 
@@ -55,11 +52,11 @@ void inter_extDef(Node *node)
 
 void inter_extDecList(Node *node, Attribute *type)
 {
-    TAC *tac = inter_varDec(node->children[0], type); // TODO?
+    tac::TAC *tac = inter_varDec(node->children[0], type); // TODO?
     while (node->children.size() > 1)
     {
         node = node->children[2];
-        TAC *tac = inter_varDec(node->children[0], type);
+        tac::TAC *tac = inter_varDec(node->children[0], type);
     }
 }
 // put IR 将tac的名字与其地址放在一个table里面？
@@ -100,9 +97,9 @@ Attribute *inter_type(Node *node)
 
 void inter_func(Node *node, Attribute *type)
 {
-    string name = get<string>(node->children[0]->getValue());
-    TAC* func = new Function(name);
-    add_tac(func);
+    std::string name = std::get<std::string>(node->children[0]->getValue());
+    tac::TAC* func = new tac::Function(name);
+    tac::add_tac(func);
 
     if (type_to_string(node->children[2]->type).compare("VarList") == 0)
     {
@@ -175,7 +172,7 @@ void inter_decList(Node *node, Attribute *type)
  * Stmt: WHILE LP Exp RP Stmt
  * WRITE LP Exp RP SEMI
  */
-vector<int> cont, br;
+std::vector<int> cont, br;
 
 void inter_stmt(Node *node)
 {
@@ -330,7 +327,7 @@ vector<int> inter_args(Node *node)
  *    | INT | FLOAT | CHAR
  *    | READ LP RP
  */
-VarableAddress* inter_exp(Node *node, bool single)
+tac::TAC* inter_exp(Node *node, bool single)
 {
     // printf("inter_exp\n");
     // READ LP RP // TODO
@@ -344,42 +341,39 @@ VarableAddress* inter_exp(Node *node, bool single)
     // INT  // | FLOAT | CHAR
     if (node->children[0]->type == NodeType::Int)  // 不引用，创建一个
     {
-        VarableAddress* id = new VarableAddress(VarableAddress::Type::TEMP)
+        auto result = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
 
-        Assign *tac = new Assign(id, new VarableAddress(get<int>(node->children[0]->getValue()))); // ??
+        tac::Assign *tac = new tac::Assign(result, new tac::VarableAddress(std::get<int>(node->children[0]->getValue()))); // ??
         add_tac(tac);
-
-        return id;
+        return result;
     }// 只有整数基本类型变量 假设2
 
     // MINUS Exp | MINUS Exp %prec UMINUS
-    if (type_to_string(node->children[0]->type).compare("Minus") == 0)
+    if (node->children[0]->type == NodeType::Minus)
     {
-        VarableAddress* expid = inter_exp(node->children[1]);
-        VarableAddress* id = new VarableAddress(VarableAddress::Type::TEMP);
-
-        Arithmetic *tac = new Arithmetic(Operator::MINUS, id, new VarableAddress(0), expid);
+        auto var = inter_exp(node->children[1]);
+        auto result = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
+        assert(var->instructionType == "Variable");
+        auto tac = new tac::Arithmetic(tac::Operator::MINUS, result, new tac::VarableAddress(0), static_cast<tac::VarableAddress*>(var));
         add_tac(tac);
-
-        return id;  // 非递归
+        return result;  // 非递归
     }
     // NOT Exp
     if (type_to_string(node->children[0]->type).compare("Not") == 0)
     {
-        int index = TAC::tac_list.size();
-
-        VarableAddress* expid = inter_exp(node->children[1]);
-        int index = TAC::tac_list.size() - 2;
-        TAC::tac_list[index]->swap_flag ^= 1;
-
-        return expid;
+        // exp
+        // not exp or exp
+        // if(!(!(exp)))
+        tac::TAC* exp_if = inter_exp(node->children[1]);
+        exp_if->swap_flag ^= 1;
+        return exp_if;
     }   // 递归
     // ID LP Args RP
     // ID LP RP
     if (node->children[0]->type == NodeType::Id && node->children.size() > 1)
     {
         // printf("Exp ID LP ARGS RP\n");
-        string name = get<string>(node->children[0]->getValue());
+        std::string name = std::get<std::string>(node->children[0]->getValue());
         if (type_to_string(node->children[2]->type).compare("Args") == 0)
         {
             auto id_vec = inter_args(node->children[2]);
