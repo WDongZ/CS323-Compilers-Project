@@ -64,6 +64,14 @@ INVALID_NUMBER ([+-]?0x[0-9a-zA-Z]*)|(0{2,}(\.[0-9]+)?)|0[0-9]+
 {FLOAT} {yylval.node = new Node(NodeType::Float, strtof(yytext, nullptr), yylineno); return FLOAT;}
 {CHARACTER} {yylval.node = new Node(NodeType::Char, yytext, yylineno); return CHAR;}
 {TYPE} {yylval.node = new Node(NodeType::Type, yytext, yylineno); return TYPE;}
+"read" {
+    yylval.node_ptr=new Node(NodeType::READ, yylineno);
+    return READ;
+}
+"write" {
+    yylval.node_ptr=new Node(NodeType::WRITE, yylineno);
+    return WRITE;
+}
 {WRONG_ID} {has_error=1; fprintf(stdout,"Error type A at Line %d: unknown lexeme %s\n",
                yylineno, yytext); return ID;}
 {ID} {yylval.node = new Node(NodeType::Id, yytext, yylineno); return ID;}

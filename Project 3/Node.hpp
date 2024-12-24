@@ -57,7 +57,9 @@ enum NodeType {
     DecList,
     Dec,
     Exp,
-    Args    
+    Args,
+    Read,
+    Write
 };
 
 inline std::string type_to_string(NodeType type) {
