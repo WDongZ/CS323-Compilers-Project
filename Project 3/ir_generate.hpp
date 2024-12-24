@@ -11,7 +11,7 @@
 // 还改了label类，添加了一个静态变量labelCounter，用于生成唯一的label
 // 下面函数名其实可以改一下，不过我懒得改了，你可以改一下，我觉得这个文件的函数名不太好
 
-int inter_exp(Node *node, bool single = false);
+tac::VarableAddress* inter_exp(Node *node, bool single = false);
 std::vector<int> inter_args(Node *node);
 // 记得改函数名
 void inter_init();
@@ -34,13 +34,11 @@ tac::TAC* inter_varDec(Node *node, Attribute* type);
 void inter_varList(Node *node);
 void inter_paramDec(Node *node);
 
-// int getIR(string name); 不知道有什么用
-// void putIR(string name, int id); 不知道有什么用
-// int genid(TAC *tac); 不需要了，因为在three_address_code.hpp中VarableAddress中自动管理id自增
-// int *genlist(int id = tac_vector.size() + 1); 不知道有什么用，暂时不需要
+int getIR(string name);
+void putIR(string name, tac::VarableAddress* id);
 
-void inter_IF(int id, int tbranch, int fbranch);
-void inter_WHILE(std::vector<int>* stat_vec, int end, int target);
+void inter_IF(int id, Label* tbranch, Label* fbranch);
+void inter_WHILE(std::vector<int>* stat_vec, int end, Label* target);
 Attribute *checkType(Node *node);
 
 // float formatPaser(string name, std::string value); 没什么意义,要的话再找我写
