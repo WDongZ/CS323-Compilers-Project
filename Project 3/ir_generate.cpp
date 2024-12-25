@@ -241,8 +241,8 @@ void inter_stmt(Node *node)
 
         tac::Label* fbranch = new tac::Label();
         add_tac(fbranch);
-
-        inter_IF(static_cast<tac::If>(expid), loopbranch, tbranch, fbranch);
+        assert(expid->instructionType == "IF");
+        inter_IF(static_cast<tac::If*>(expid), loopbranch, tbranch, fbranch);
         inter_WHILE(&cont, cont_size, loop_start);
         inter_WHILE(&br, br_size, fbranch);
     }
@@ -293,23 +293,18 @@ vector<int> inter_args(Node *node)
 {
     // printf("inter_args\n");
     vector<int> args_vector;
-    tac::VarableAddress* exp_varia = inter_exp(node->children[0]);
-    int exp_id = TAC::tac_list.size() - 2;
-    if (typeid(TAC::tac_list[TAC::tac_list.size() - 2]) == typeid(Dec))
-    {
-        add_tac(new tac::AssignAddr(new tac::VarableAddress(VarableAddress::Type::TEMP), new tac::VarableAddress(VarableAddress::Type::TEMP)));
-    }
-    args_vector.push_back(exp_id);
+    auto exp_varia = inter_exp(node->children[0]);
+    // 原本有这个tac是否为dec？
+    tac::add_tac(new tac::AssignAddr(new tac::VarableAddress(tac::VarableAddress::Type::TEMP), static_cast<tac::VarableAddress*>(exp_varia)));
+    args_vector.push_back(exp_varia);
     while (node->children.size() > 1)
     {
         node = node->children[2];
         exp_varia = inter_exp(node->children[0]);
-        exp_id = TAC::tac_list.size() - 2;
-        args_vector.push_back(exp_id);
-        if (typeid(TAC::tac_list[exp_id]) != typeid(Dec))
-        {
-            add_tac(new tac::AssignAddr(new tac::VarableAddress(VarableAddress::Type::TEMP), new tac::VarableAddress(VarableAddress::Type::TEMP)));
-        }
+        args_vector.push_back(exp_varia);
+        //原本有一个 if 判断tac为 dec？
+            add_tac(new tac::AssignAddr(new tac::VarableAddress(VarableAddress::Type::TEMP), static_cast<tac::VarableAddress*>(exp_varia)));
+
     }
     return args_vector;
 }
@@ -382,7 +377,7 @@ tac::TAC* inter_exp(Node *node, bool single)
                 add_tac(new tac::Arg(new tac::VarableAddress(tac::VarableAddress::Type::TEMP)));
             }
         }
-        tac::VarableAddress* id = new tac::VarableAddress(VarableAddress::Type::TEMP);
+        tac::VarableAddress* id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         add_tac(new tac::Call(id, new tac::Function(name)));
         return id;
     }
@@ -403,15 +398,15 @@ tac::TAC* inter_exp(Node *node, bool single)
         else if (!id)
         {
             res_id = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
-            tac::add_tac(new tac::Assign(res_id, new tac::arableAddress(0)));
+            tac::add_tac(new tac::Assign(res_id, new tac::VarableAddress(0)));
         }
         else
         {
-            res_id = new tac::VarableAddress(VarableAddress::Type::VAR);
+            res_id = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
         }
         return res_id;
     }
-    // Exp [{AND}|{OR}] Exp // TODO
+    // Exp [{AND}|{OR}] Exp // TODO //这个地方需要改
     if (node->children[1]->type == NodeType::Or)
     {
         // printf("Exp OR\n");
@@ -485,6 +480,8 @@ tac::TAC* inter_exp(Node *node, bool single)
         }
         return rexpid;
     }
+
+    //到此为止
     // Exp [{LT}|{LE}|{GT}|{GE}|{NE}|{EQ}] Exp
     if (node->children[1]->type == NodeType::Lt)
     {

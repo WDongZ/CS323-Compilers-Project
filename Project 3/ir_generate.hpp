@@ -38,7 +38,7 @@ void inter_paramDec(Node *node);
 tac::VarableAddress* getIR(string name);
 void putIR(string name, tac::VarableAddress* id);
 
-void inter_IF(tac::If* id, tac::Goto* tbranch, tac::Label* fbranch);
+void inter_IF(tac::If* id, tac::Goto* gotoid, tac::Label* tbranch, tac::Label* fbranch);
 void inter_WHILE(std::vector<int>* stat_vec, int end, tac::Label* target);
 Attribute *checkType(Node *node);
 
