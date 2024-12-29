@@ -343,9 +343,10 @@ tac::TAC* inter_exp(Node *node, bool single)
    if (node->children[0]->type == NodeType::Read)
    {
        // printf("Exp READ\n");
-       tac::Read *tac = new tac::Read(new tac::VarableAddress(tac::VarableAddress::Type::TEMP));
+       tac::VarableAddress* id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
+       tac::Read *tac = new tac::Read(id);
        tac::add_tac(tac);
-       return tac;
+       return id;
    }
     // INT  // | FLOAT | CHAR
     if (node->children[0]->type == NodeType::Int)  // 不引用，创建一个

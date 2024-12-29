@@ -116,6 +116,8 @@ inline std::string type_to_string(NodeType type) {
         case Dec: return "Dec";
         case Exp: return "Exp";
         case Args: return "Args";
+        case Read: return "Read";
+        case Write: return "Write";
         default: {
             std::cerr << "Unknown NodeType: " << type << std::endl;
             return "Unknown";
