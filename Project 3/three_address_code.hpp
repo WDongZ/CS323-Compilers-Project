@@ -51,8 +51,8 @@ namespace tac
         };
         // 保存不同类型的变量数量,用于生成唯一的变量地址
         static std::unordered_map<Type, int> varable_count;
-        int value;
         Type type;
+        int value;
         // 常量
         VarableAddress(int value): TAC(std::string("Variable")),type(Type::CONSTANT),value(value) {}
         // 临时变量和变量的构造函数，根据类型从varable_count中获取当前的数量

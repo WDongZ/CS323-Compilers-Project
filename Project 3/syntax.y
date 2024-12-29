@@ -7,7 +7,7 @@
 #include "Node.hpp"
 #include "type.hpp"
 #include "symbol.hpp"
-#include "semantic.hpp"
+#include "ir_generate.hpp"
 extern int yyparse();
 extern int yylex();
 extern FILE* yyin;
@@ -47,7 +47,7 @@ int error=0;
 
 %%
 /* high-level definition */
-Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {parseProgram($$);} }
+Program : ExtDefList {  $$ = Node::makeNode(NodeType::Program, {$1}, @$.first_line);if(error==0) {inter_program($$); } }
     ;
 ExtDefList :            { $$ = Node::makeNode(NodeType::ExtDefList, @$.first_line);}
     | ExtDef ExtDefList { $$ = Node::makeNode(NodeType::ExtDefList,{$1,$2}, @$.first_line); }

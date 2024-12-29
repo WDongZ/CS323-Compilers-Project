@@ -13,10 +13,10 @@ class ParamsList;
 
 class Attribute {
 public:
+    Category category;
     NodeType nodetype;
     Array* array_ptr = nullptr;
     ParamsList* params_ptr = nullptr;
-    Category category;
 
     Attribute(Category category, NodeType nodetype);
     Attribute(Category category, Array* array_ptr);

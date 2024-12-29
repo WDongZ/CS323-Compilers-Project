@@ -184,10 +184,10 @@ std::string tac::Write::to_string() const
     std::string message = ss.str();
     return message;
 }
-int main () {
-    // test Assign
-    tac::VarableAddress * left = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
-    tac::VarableAddress * right = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
-    tac::Assign assign(left, right);
-    std::cout << assign << std::endl;
-}
+// int main () {
+//     // test Assign
+//     tac::VarableAddress * left = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
+//     tac::VarableAddress * right = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
+//     tac::Assign assign(left, right);
+//     std::cout << assign << std::endl;
+// }

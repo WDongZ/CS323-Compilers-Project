@@ -10,12 +10,13 @@ std::unordered_map<std::string, tac::VarableAddress*> table;
 void inter_program(Node *root)
 {
     inter_init();
+    std::cout << *root << std::endl;
 
     inter_extDefList(root->children[0]);
 
-    for (int i = 1; i < tac::TAC::tac_list.size(); ++i)
+    for (auto& i : tac::TAC::tac_list)
     {
-        std::cout << tac::TAC::tac_list[i] << std::endl;
+        std::cout << *i << std::endl;
     }
 }
 
@@ -188,12 +189,12 @@ void inter_stmt(Node *node)
         inter_exp(node->children[0]);
     }
     // CompSt
-    else if (type_to_string(node->children[0]->type).compare("CompSt") == 0)
+    else if (node->children[0]->type == NodeType::CompSt)
     {
         inter_compSt(node->children[0]);
     }
     // RETURN Exp SEMI
-    else if (type_to_string(node->children[0]->type).compare("Return") == 0)
+    else if (node->children[0]->type == NodeType::Return)
     {
         auto exps = inter_exp(node->children[1]);
         assert(exps->instructionType == "Variable");
@@ -255,11 +256,12 @@ void inter_stmt(Node *node)
         inter_WHILE(&br, br_size, fbranch);
     }
     // WRITE LP Exp RP SEMI // TODO 能不能读取read write？
-//    else if (type_to_string(node->children[0]->type).compare("Write") == 0)
-//    {
-//        int id = inter_exp(node->children[2]);
-//        add_tac(new Write(TAC::tac_list.size(), id));
-//    }
+   else if (type_to_string(node->children[0]->type).compare("Write") == 0)
+   {
+       auto id = inter_exp(node->children[2]);
+       assert(id->instructionType == "Variable");
+       add_tac(new tac::Write(static_cast<tac::VarableAddress*>(id)));
+   }
     else
     {
         assert(NULL);
@@ -338,13 +340,13 @@ tac::TAC* inter_exp(Node *node, bool single)
 {
     // printf("inter_exp\n");
     // READ LP RP // TODO
-//    if (node->children[0]->type == NodeType::Read)
-//    {
-//        // printf("Exp READ\n");
-//        TAC_Read *tac = new TAC_Read(TAC::tac_list.size());
-//        int id = genid(tac);
-//        return id;
-//    }
+   if (node->children[0]->type == NodeType::Read)
+   {
+       // printf("Exp READ\n");
+       tac::Read *tac = new tac::Read(new tac::VarableAddress(tac::VarableAddress::Type::TEMP));
+       tac::add_tac(tac);
+       return tac;
+   }
     // INT  // | FLOAT | CHAR
     if (node->children[0]->type == NodeType::Int)  // 不引用，创建一个
     {
