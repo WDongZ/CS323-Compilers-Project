@@ -13,7 +13,7 @@ using namespace std;
 // 下面函数名其实可以改一下，不过我懒得改了，你可以改一下，我觉得这个文件的函数名不太好
 
 tac::TAC* inter_exp(Node *node, bool single = false);
-std::vector<int> inter_args(Node *node);
+std::vector<tac::TAC*> inter_args(Node *node);
 // 记得改函数名
 void inter_init();
 void inter_program(Node *root);
@@ -34,9 +34,6 @@ void inter_dec(Node *node, Attribute *type);
 tac::TAC* inter_varDec(Node *node, Attribute* type);
 void inter_varList(Node *node);
 void inter_paramDec(Node *node);
-
-tac::VarableAddress* getIR(string name);
-void putIR(string name, tac::VarableAddress* id);
 
 void inter_IF(tac::If* id, tac::Goto* gotoid, tac::Label* tbranch, tac::Label* fbranch);
 void inter_WHILE(std::vector<int>* stat_vec, int end, tac::Label* target);

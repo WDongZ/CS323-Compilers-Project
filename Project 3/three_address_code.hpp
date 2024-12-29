@@ -29,7 +29,7 @@ namespace tac
     public:
         std::string instructionType;
         bool swap_flag = false; // 不知道是什么意思，可能if会用一下，但据gpt说用来交换左右操作数？如果只在if利用，你就把这个单独放到if里
-
+        size_t line_code = 0;
         TAC(const std::string& type): instructionType(type), swap_flag(false) {}
         virtual ~TAC() = default;
         virtual std::string to_string() const = 0;

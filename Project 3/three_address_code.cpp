@@ -22,6 +22,7 @@ std::vector<tac::TAC *> tac::TAC::tac_list;
 // 添加TAC指令到tac_list
 void tac::add_tac(TAC *tac)
 {
+    tac->line_code = TAC::tac_list.size();
     TAC::tac_list.push_back(tac);
 }
 // 静态变量，保存不同类型的变量数量
