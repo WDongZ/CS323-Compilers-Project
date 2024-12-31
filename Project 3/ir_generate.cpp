@@ -258,9 +258,12 @@ void inter_stmt(Node *node)
     // WRITE LP Exp RP SEMI // TODO 能不能读取read write？
    else if (type_to_string(node->children[0]->type).compare("Write") == 0)
    {
-       auto id = inter_exp(node->children[2]);
-       assert(id->instructionType == "Variable");
-       add_tac(new tac::Write(static_cast<tac::VarableAddress*>(id)));
+        auto id = inter_exp(node->children[2]);
+        if (id->instructionType != "Variable") {
+                std::cout << "id: " << id->instructionType << std::endl;
+        }
+        assert(id->instructionType == "Variable");
+        add_tac(new tac::Write(static_cast<tac::VarableAddress*>(id)));
    }
     else
     {
@@ -411,8 +414,8 @@ tac::TAC* inter_exp(Node *node, bool single)
         else if (!id)
         {
             auto left = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
-            res_id = new tac::Assign(left, new tac::VarableAddress(0));
-            tac::add_tac(res_id);
+            res_id = left;
+            tac::add_tac(new tac::Assign(left, new tac::VarableAddress(0)));
         }
         else
         {

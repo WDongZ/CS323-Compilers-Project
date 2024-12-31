@@ -25,6 +25,13 @@ void tac::add_tac(TAC *tac)
     tac->line_code = TAC::tac_list.size();
     TAC::tac_list.push_back(tac);
 }
+std::string tac::TAC::to_string() const
+{
+    std::stringstream ss;
+    ss << "TAC:" << instructionType << " line_code:" << line_code << std::endl;
+    return ss.str();
+}
+
 // 静态变量，保存不同类型的变量数量
 std::unordered_map<tac::VarableAddress::Type, int> tac::VarableAddress::varable_count;
 tac::VarableAddress::VarableAddress(Type type) : TAC(std::string("Variable")), type(type)

@@ -32,7 +32,7 @@ namespace tac
         size_t line_code = 0;
         TAC(const std::string& type): instructionType(type), swap_flag(false) {}
         virtual ~TAC() = default;
-        virtual std::string to_string() const = 0;
+        virtual std::string to_string() const;
         // 保存所有的TAC指令
         static std::vector<TAC *> tac_list;
     };
