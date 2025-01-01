@@ -207,8 +207,6 @@ void inter_stmt(Node *node)
     // 可能有问题，主要在于else if部分
     else if (node->children[0]->type == NodeType::If)
     {
-        std::cout << "inter_stmt if" << std::endl << *node << std::endl;
-        std::cout << "node size: " << node->children.size() << std::endl;
         auto expid = inter_exp(node->children[2]);
         assert(expid->instructionType == "IF");
         
@@ -237,7 +235,7 @@ void inter_stmt(Node *node)
         }
     }
     // WHILE LP Exp RP Stmt
-    // 还没看
+    // 跟着if一起改了一下
     else if (node->children[0]->type == NodeType::While)
     {
         size_t cont_size = cont.size();
