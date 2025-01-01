@@ -1,7 +1,6 @@
 #include "type.hpp"
 #include "unordered_map"
 #include "three_address_code.hpp"
-using namespace std;
 // extern vector<TAC *> tac_vector; 请使用tac::TAC::tac_list, 
 // 如果要把tac放进去可以用tac::add_tac(tac)
 // extern unordered_map<string, int> table; 不知道有什么用
@@ -36,7 +35,7 @@ void inter_varList(Node *node);
 void inter_paramDec(Node *node);
 
 void inter_IF(tac::If* id, tac::Goto* gotoid, tac::Label* tbranch, tac::Label* fbranch);
-void inter_WHILE(std::vector<int>* stat_vec, int end, tac::Label* target);
+void inter_WHILE(std::vector<int>* stat_vec, size_t end, tac::Label* target);
 Attribute *checkType(Node *node);
 
 // float formatPaser(string name, std::string value); 没什么意义,要的话再找我写

@@ -55,12 +55,14 @@ void inter_extDef(Node *node)
 void inter_extDecList(Node *node, Attribute *type)
 {
     tac::TAC *tac = inter_varDec(node->children[0], type); // TODO?
-    while (node->children.size() > 1)
-    {
-        node = node->children[2];
-        tac::TAC *tac = inter_varDec(node->children[0], type);
-        std::cout << "inner inter_extDecList" << std::endl;
-    }
+    assert(node->children.size() > 1); // no dec!!!
+    // while (node->children.size() > 1)
+    // {
+        
+    //     node = node->children[2];
+    //     tac::TAC *tac = inter_varDec(node->children[0], type);
+    //     std::cout << "inner inter_extDecList" << std::endl;
+    // }
     tac::add_tac(tac);
     // table[tac->instructionType] = static_cast<tac::VarableAddress*>(tac);
 }
@@ -202,23 +204,30 @@ void inter_stmt(Node *node)
         add_tac(tac_return);
     }
     // IF LP Exp RP Stmt (ELSE Stmt)
-    // 还没看
+    // 可能有问题，主要在于else if部分
     else if (node->children[0]->type == NodeType::If)
     {
+        std::cout << "inter_stmt if" << std::endl << *node << std::endl;
+        std::cout << "node size: " << node->children.size() << std::endl;
         auto expid = inter_exp(node->children[2]);
         assert(expid->instructionType == "IF");
+        
         tac::Label* tbranch = new tac::Label();
         add_tac(tbranch);
+        tac::Goto* jbranch = nullptr;
+
         inter_stmt(node->children[4]);
-        tac::Goto* jbranch;
         if (node->children.size() >= 6)
         {
+            // std::cout << "inter_stmt if else" << std::endl;
             jbranch = new tac::Goto(new tac::Label());
             add_tac(jbranch);
         }
-        tac::Label* fbranch = new tac::Label();
+        auto fgoto = tac::TAC::tac_list[expid->line_code + 1];
+        assert(fgoto->instructionType == "GOTO");
+        tac::Label* fbranch = static_cast<tac::Goto*>(fgoto)->label; 
         add_tac(fbranch);
-        inter_IF(static_cast<tac::If*>(expid), jbranch , tbranch, fbranch);
+        inter_IF(static_cast<tac::If*>(expid), static_cast<tac::Goto*>(fgoto) , tbranch, fbranch);
         if (node->children.size() >= 6)
         {
             inter_stmt(node->children[6]);
@@ -229,13 +238,14 @@ void inter_stmt(Node *node)
     }
     // WHILE LP Exp RP Stmt
     // 还没看
-    else if (type_to_string(node->children[0]->type).compare("While") == 0)
+    else if (node->children[0]->type == NodeType::While)
     {
-        int cont_size = cont.size();
-        int br_size = br.size();
+        size_t cont_size = cont.size();
+        size_t br_size = br.size();
 
         tac::Label* loop_start = new tac::Label();
         add_tac(loop_start);
+
         auto expid = inter_exp(node->children[2]);
         assert(expid->instructionType == "IF");
         expid = static_cast<tac::If*>(expid);
@@ -247,11 +257,13 @@ void inter_stmt(Node *node)
 
         tac::Goto* loopbranch = new tac::Goto(loop_start);
         add_tac(loopbranch);
-
-        tac::Label* fbranch = new tac::Label();
-        add_tac(fbranch);
+        
         assert(expid->instructionType == "IF");
-        inter_IF(static_cast<tac::If*>(expid), loopbranch, tbranch, fbranch);
+        auto fgoto = tac::TAC::tac_list[expid->line_code + 1];
+        assert(fgoto->instructionType == "GOTO");
+        tac::Label* fbranch = static_cast<tac::Goto*>(fgoto)->label;
+        add_tac(fbranch);
+        inter_IF(static_cast<tac::If*>(expid), static_cast<tac::Goto *>(fgoto) , tbranch, fbranch);
         inter_WHILE(&cont, cont_size, loop_start);
         inter_WHILE(&br, br_size, fbranch);
     }
@@ -303,10 +315,10 @@ tac::TAC *inter_varDec(Node *node, Attribute *type)
  * Args: Exp COMMA Args
  * Args: Exp
  */
-vector<tac::TAC *> inter_args(Node *node)
+std::vector<tac::TAC *> inter_args(Node *node)
 {
     // printf("inter_args\n");
-    vector<tac::TAC *> args_vector;
+    std::vector<tac::TAC *> args_vector;
     auto exp_varia = inter_exp(node->children[0]);
     // 原本有这个tac是否为dec？
     assert(exp_varia->instructionType == "Variable");
@@ -399,7 +411,7 @@ tac::TAC* inter_exp(Node *node, bool single)
     // ID //TODO check
     if (node->children[0]->type == NodeType::Id)
     {
-        string name = get<string>(node->children[0]->getValue());
+        std::string name = std::get<std::string>(node->children[0]->getValue());
         tac::VarableAddress* id = table[name];
         tac::TAC* res_id = nullptr;
         if (single)
@@ -535,6 +547,7 @@ tac::TAC* inter_exp(Node *node, bool single)
         tac::If *iftac = new tac::If(tac::Operator::LT, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
+        tac::add_tac(gototac);
         return iftac;
     }
     if (node->children[1]->type == NodeType::Le)
@@ -659,7 +672,7 @@ tac::TAC* inter_exp(Node *node, bool single)
                 while(vec_size--){
                     Node *ast = vec.back();
                     vec.pop_back();
-                    string name = type_to_string(ast->children[2]->type);
+                    std::string name = type_to_string(ast->children[2]->type);
                     tac::add_tac(new tac::Arithmetic(tac::Operator::PLUS, new tac::VarableAddress(tac::VarableAddress::Type::TEMP), static_cast<tac::VarableAddress *>(id), new tac::VarableAddress(0)));
                 }
             }else if(top->children.size() == 3){
@@ -692,7 +705,7 @@ tac::TAC* inter_exp(Node *node, bool single)
 void inter_varList(Node *node)
 {
     // printf("inter_varList\n");
-    vector<Node *> vec = {node->children[0]};
+    std::vector<Node *> vec = {node->children[0]};
     while (node->children.size() > 1)
     {
         node = node->children[2];
@@ -753,20 +766,17 @@ Attribute *checkType(Node *node)
 }
 
 
-void inter_IF(tac::If * id, tac::Goto* gotoid, tac::Label* tbranch, tac::Label* fbranch)
-{
-    // printf("inter_IF\n");
-    if (id->swap_flag)
+void inter_IF(tac::If * iftac, tac::Goto* gototac, tac::Label* tbranch, tac::Label* fbranch)
+{   
+    if (iftac->swap_flag)
     {
-        tac::Label* temp = tbranch;
-        tbranch = fbranch;
-        fbranch = temp;
+        std::swap(tbranch, fbranch);
     }
-    id->label = tbranch;
-    gotoid->label = fbranch;
+    iftac->label = tbranch;
+    gototac->label = fbranch;
 }
 
-void inter_WHILE(vector<int> *stat_vec, int end, tac::Label* target)
+void inter_WHILE(std::vector<int> *stat_vec, size_t end, tac::Label* target)
 {
     // printf("inter_WHILE");
     while (stat_vec->size() > end)
