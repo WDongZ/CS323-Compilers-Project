@@ -41,7 +41,14 @@ void tac::add_var(Node *node, VarableAddress* var)
     if (node->type == NodeType::Id)
     {
         std::string name = std::get<std::string>(node->getValue());
+        std::cout << "add var: " << name << " for " << *var << std::endl;
         var_save[name] = var;
+    } else if ( node->type == NodeType::VarDec) {
+        auto& var_id = node->children[0];
+        add_var(var_id, var);
+    } else if (node->type == NodeType::ParamDec) {
+        auto& vardec = node->children[1];
+        add_var(vardec, var);
     }
 }
 tac::VarableAddress* tac::find_var(Node *node)
@@ -177,7 +184,7 @@ std::string tac::Param::to_string() const
 {
     std::stringstream ss;
     ss << "PARAM " << * var;
-    return std::string();
+    return ss.str();
 }
 // arg指令
 std::string tac::Arg::to_string() const

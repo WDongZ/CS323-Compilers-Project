@@ -734,7 +734,7 @@ void inter_paramDec(Node *node)
     {
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Param * param = new tac::Param(id);
-        tac::var_save[tac->instructionType] = id;
+        tac::add_var(node, id);
         tac::add_tac(param);
     }
 }
