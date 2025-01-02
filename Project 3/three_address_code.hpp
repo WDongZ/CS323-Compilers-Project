@@ -5,6 +5,7 @@
 #include <sstream>
 #include <unordered_map>
 #include "type.hpp"
+#include "Node.hpp"
 namespace tac
 {
     enum class Operator
@@ -22,7 +23,6 @@ namespace tac
     };
 
     std::ostream& operator<<(std::ostream& os, const Operator& op);
-
     // TAC指令基类
     class TAC
     {
@@ -59,6 +59,12 @@ namespace tac
         VarableAddress(Type type);
         std::string to_string() const override;
     };
+    // 保存对应ID变量的值
+    extern std::unordered_map<std::string, VarableAddress*> var_save;
+    // 利用Node *添加变量
+    void add_var(Node *node, VarableAddress* var);
+    // 利用Node *查询变量
+    VarableAddress* find_var(Node *node);
     class Label : public TAC {
     public:
         int labeladdress;

@@ -19,6 +19,8 @@ std::ostream& tac::operator<<(std::ostream& os, const Operator& op)
 }
 // 静态变量，保存所有的TAC指令
 std::vector<tac::TAC *> tac::TAC::tac_list;
+// 静态变量，保存对应ID变量的值
+std::unordered_map<std::string, tac::VarableAddress*> tac::var_save;
 // 添加TAC指令到tac_list
 void tac::add_tac(TAC *tac)
 {
@@ -34,6 +36,24 @@ std::string tac::TAC::to_string() const
 
 // 静态变量，保存不同类型的变量数量
 std::unordered_map<tac::VarableAddress::Type, int> tac::VarableAddress::varable_count;
+void tac::add_var(Node *node, VarableAddress* var)
+{
+    if (node->type == NodeType::Id)
+    {
+        std::string name = std::get<std::string>(node->getValue());
+        var_save[name] = var;
+    }
+}
+tac::VarableAddress* tac::find_var(Node *node)
+{
+    if (node->type == NodeType::Id)
+    {
+        std::string name = std::get<std::string>(node->getValue());
+        return var_save[name];
+    }
+    return nullptr;
+}
+
 tac::VarableAddress::VarableAddress(Type type) : TAC(std::string("Variable")), type(type)
 {
     value = ++varable_count[type];

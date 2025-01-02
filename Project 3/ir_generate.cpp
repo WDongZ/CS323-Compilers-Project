@@ -3,7 +3,6 @@
 #include <cassert>
 #include <vector>
 
-std::unordered_map<std::string, tac::VarableAddress*> table;
 /**
  * Program: ExtDefList
  */
@@ -63,6 +62,9 @@ void inter_extDecList(Node *node, Attribute *type)
     //     tac::TAC *tac = inter_varDec(node->children[0], type);
     //     std::cout << "inner inter_extDecList" << std::endl;
     // }
+    std::cout << "inter_extDecList" << std::endl;
+    std::cout << *node << std::endl;
+    tac::add_var(node->children[0], static_cast<tac::VarableAddress*>(tac));
     tac::add_tac(tac);
     // table[tac->instructionType] = static_cast<tac::VarableAddress*>(tac);
 }
@@ -290,13 +292,17 @@ void inter_dec(Node *node, Attribute *type)
     tac::VarableAddress* expid = nullptr;
     if (node->children.size() > 1)
     {
-        expid = static_cast<tac::VarableAddress* >(inter_exp(node->children[2]));
+        auto exp = inter_exp(node->children[2]);
+        assert(exp->instructionType == "Variable");
+        expid = static_cast<tac::VarableAddress* >(exp);
     }
     tac::TAC *tac = inter_varDec(node->children[0], type);
     if (expid)
     {
         dynamic_cast<tac::Assign *>(tac)->right = expid;
         tac::add_tac(tac);
+        Node* var = node->children[0]->children[0];
+        tac::add_var(var, expid);
     }
 }
 
@@ -410,13 +416,13 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[0]->type == NodeType::Id)
     {
         std::string name = std::get<std::string>(node->children[0]->getValue());
-        tac::VarableAddress* id = table[name];
+        tac::VarableAddress* id = tac::find_var(node->children[0]);
         tac::TAC* res_id = nullptr;
         if (single)
         {
             if(!id){
                 id = new tac::VarableAddress(tac::VarableAddress::Type::VAR);
-                table[name] = id;
+                tac::var_save[name] = id;
             }
             res_id = new tac::Assign(id, new tac::VarableAddress(0));
             tac::add_tac(res_id);
@@ -728,7 +734,7 @@ void inter_paramDec(Node *node)
     {
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Param * param = new tac::Param(id);
-        table[tac->instructionType] = id;
+        tac::var_save[tac->instructionType] = id;
         tac::add_tac(param);
     }
 }
@@ -738,7 +744,6 @@ void inter_init()
     // printf("inter_init\n");
     tac::TAC::tac_list.clear();
     //tac::TAC::tac_list.push_back(new tac::TAC());
-    table.clear();
     cont.clear();
     br.clear();
 }
