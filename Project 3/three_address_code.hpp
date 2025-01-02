@@ -62,6 +62,7 @@ namespace tac
     // 保存对应ID变量的值
     extern std::unordered_map<std::string, VarableAddress*> var_save;
     // 利用Node *添加变量
+    // 目前支持Node::Id, Node::VarDec, Node::ParamDec
     void add_var(Node *node, VarableAddress* var);
     // 利用Node *查询变量
     VarableAddress* find_var(Node *node);

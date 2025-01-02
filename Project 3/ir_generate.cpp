@@ -300,10 +300,9 @@ void inter_dec(Node *node, Attribute *type)
     if (expid)
     {
         dynamic_cast<tac::Assign *>(tac)->right = expid;
-        tac::add_tac(tac);
-        Node* var = node->children[0]->children[0];
-        tac::add_var(var, expid);
     }
+    tac::add_var(node->children[0], static_cast<tac::Assign* >(tac)->left);
+    tac::add_tac(tac);
 }
 
 /**
@@ -599,6 +598,9 @@ tac::TAC* inter_exp(Node *node, bool single)
     {
         auto lexpid = inter_exp(node->children[0]);
         auto rexpid = inter_exp(node->children[2]);
+        std::cout << "Eq" << std::endl;
+        std::cout << *lexpid << std::endl;
+        std::cout << *rexpid << std::endl;
         tac::If *iftac = new tac::If(tac::Operator::EQ, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
