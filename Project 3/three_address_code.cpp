@@ -41,7 +41,7 @@ void tac::add_var(Node *node, VarableAddress* var)
     if (node->type == NodeType::Id)
     {
         std::string name = std::get<std::string>(node->getValue());
-        std::cout << "add var: " << name << " for " << *var << std::endl;
+        // std::cout << "add var: " << name << " for " << *var << std::endl;
         var_save[name] = var;
     } else if ( node->type == NodeType::VarDec) {
         auto& var_id = node->children[0];

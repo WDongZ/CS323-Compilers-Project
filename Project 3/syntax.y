@@ -231,6 +231,5 @@ int main(int argc, char* argv[]) {
     yyparse();
 
     fclose(yyin);
-    std::cout << "complete" << std::endl;
     return 0;
 }
