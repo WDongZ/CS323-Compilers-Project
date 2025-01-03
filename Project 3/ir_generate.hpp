@@ -10,7 +10,6 @@
 tac::TAC* inter_exp(Node *node, bool single = false);
 std::vector<tac::TAC*> inter_args(Node *node);
 
-void inter_init();
 void inter_program(Node *root);
 void inter_extDefList(Node *node);
 void inter_extDecList(Node *node, Attribute * type);

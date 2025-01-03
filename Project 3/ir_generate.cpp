@@ -8,7 +8,6 @@
  */
 void inter_program(Node *root)
 {
-    inter_init();
     // std::cout << *root << std::endl;
 
     inter_extDefList(root->children[0]);
@@ -734,15 +733,6 @@ void inter_paramDec(Node *node)
         tac::add_var(node, id);
         tac::add_tac(param);
     }
-}
-
-void inter_init()
-{
-    // printf("inter_init\n");
-    tac::TAC::tac_list.clear();
-    //tac::TAC::tac_list.push_back(new tac::TAC());
-    cont.clear();
-    br.clear();
 }
 
 Attribute *checkType(Node *node)
