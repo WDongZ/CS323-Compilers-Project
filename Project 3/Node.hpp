@@ -5,7 +5,7 @@
 #include <variant>
 #include <vector>
 #include <iostream>
-enum NodeType {
+enum class NodeType {
     Type,
     Int,
     Float,
@@ -64,62 +64,62 @@ enum NodeType {
 
 inline std::string type_to_string(NodeType type) {
     switch (type) {
-        case Type: return "Type";
-        case Int: return "Int";
-        case Float: return "Float";
-        case Char: return "Char";
-        case Id: return "Id";
-        case If: return "If";
-        case Else: return "Else";
-        case While: return "While";
-        case Return: return "Return";
-        case Dot: return "Dot";
-        case Semi: return "Semi";
-        case Comma: return "Comma";
-        case Assign: return "Assign";
-        case Struct: return "Struct";
-        case Lt: return "Lt";
-        case Le: return "Le";
-        case Gt: return "Gt";
-        case Ge: return "Ge";
-        case Ne: return "Ne";
-        case Eq: return "Eq";
-        case Plus: return "Plus";
-        case Minus: return "Minus";
-        case Mul: return "Mul";
-        case Div: return "Div";
-        case And: return "And";
-        case Or: return "Or";
-        case Not: return "Not";
-        case Lp: return "LP";
-        case Rp: return "RP";
-        case Lb: return "LB";
-        case Rb: return "RB";
-        case Lc: return "LC";
-        case Rc: return "RC";
-        case Program: return "Program";
-        case ExtDefList: return "ExtDefList";
-        case ExtDef: return "ExtDef";
-        case ExtDecList: return "ExtDecList";
-        case Specifier: return "Specifier";
-        case StructSpecifier: return "StructSpecifier";
-        case VarDec: return "VarDec";
-        case FunDec: return "FunDec";
-        case VarList: return "VarList";
-        case ParamDec: return "ParamDec";
-        case CompSt: return "CompSt";
-        case StmtList: return "StmtList";
-        case Stmt: return "Stmt";
-        case DefList: return "DefList";
-        case Def: return "Def";
-        case DecList: return "DecList";
-        case Dec: return "Dec";
-        case Exp: return "Exp";
-        case Args: return "Args";
-        case Read: return "Read";
-        case Write: return "Write";
+        case NodeType::Type: return "Type";
+        case NodeType::Int: return "Int";
+        case NodeType::Float: return "Float";
+        case NodeType::Char: return "Char";
+        case NodeType::Id: return "Id";
+        case NodeType::If: return "If";
+        case NodeType::Else: return "Else";
+        case NodeType::While: return "While";
+        case NodeType::Return: return "Return";
+        case NodeType::Dot: return "Dot";
+        case NodeType::Semi: return "Semi";
+        case NodeType::Comma: return "Comma";
+        case NodeType::Assign: return "Assign";
+        case NodeType::Struct: return "Struct";
+        case NodeType::Lt: return "Lt";
+        case NodeType::Le: return "Le";
+        case NodeType::Gt: return "Gt";
+        case NodeType::Ge: return "Ge";
+        case NodeType::Ne: return "Ne";
+        case NodeType::Eq: return "Eq";
+        case NodeType::Plus: return "Plus";
+        case NodeType::Minus: return "Minus";
+        case NodeType::Mul: return "Mul";
+        case NodeType::Div: return "Div";
+        case NodeType::And: return "And";
+        case NodeType::Or: return "Or";
+        case NodeType::Not: return "Not";
+        case NodeType::Lp: return "LP";
+        case NodeType::Rp: return "RP";
+        case NodeType::Lb: return "LB";
+        case NodeType::Rb: return "RB";
+        case NodeType::Lc: return "LC";
+        case NodeType::Rc: return "RC";
+        case NodeType::Program: return "Program";
+        case NodeType::ExtDefList: return "ExtDefList";
+        case NodeType::ExtDef: return "ExtDef";
+        case NodeType::ExtDecList: return "ExtDecList";
+        case NodeType::Specifier: return "Specifier";
+        case NodeType::StructSpecifier: return "StructSpecifier";
+        case NodeType::VarDec: return "VarDec";
+        case NodeType::FunDec: return "FunDec";
+        case NodeType::VarList: return "VarList";
+        case NodeType::ParamDec: return "ParamDec";
+        case NodeType::CompSt: return "CompSt";
+        case NodeType::StmtList: return "StmtList";
+        case NodeType::Stmt: return "Stmt";
+        case NodeType::DefList: return "DefList";
+        case NodeType::Def: return "Def";
+        case NodeType::DecList: return "DecList";
+        case NodeType::Dec: return "Dec";
+        case NodeType::Exp: return "Exp";
+        case NodeType::Args: return "Args";
+        case NodeType::Read: return "Read";
+        case NodeType::Write: return "Write";
         default: {
-            std::cerr << "Unknown NodeType: " << type << std::endl;
+            std::cerr << "Unknown NodeType" << std::endl;
             return "Unknown";
         }
     }
