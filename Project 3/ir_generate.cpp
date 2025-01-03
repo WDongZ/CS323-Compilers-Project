@@ -212,7 +212,7 @@ void inter_stmt(Node *node)
         auto expid = inter_exp(node->children[2]);
         assert(expid->instructionType == "IF");
         
-        tac::Label* tbranch = new tac::Label();
+        tac::Label* tbranch = static_cast<tac::If*>(expid)->label;
         add_tac(tbranch);
         tac::Goto* jbranch = nullptr;
 
@@ -441,7 +441,7 @@ tac::TAC* inter_exp(Node *node, bool single)
     // Exp [{AND}|{OR}] Exp // TODO //这个地方需要改
     if (node->children[1]->type == NodeType::Or)
     {
-        // printf("Exp OR\n");
+        std::cout << "Exp OR" << std::endl;
         auto lexpid = inter_exp(node->children[0]);
         assert(lexpid->instructionType == "IF");
         int lswap_flag = lexpid->swap_flag;
