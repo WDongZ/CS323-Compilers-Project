@@ -2,27 +2,44 @@
 #include <typeinfo>
 #include <cassert>
 #include <vector>
+#include <fstream>
 
 /**
  * Program: ExtDefList
  */
-void inter_program(Node *root)
+void program_ir(Node *root, const std::string& inputFilePath)
 {
     // std::cout << *root << std::endl;
 
-    inter_extDefList(root->children[0]);
+    std::string outputFilePath = inputFilePath;
+    size_t lastDot = outputFilePath.find_last_of('.');
+    if (lastDot != std::string::npos) {
+        outputFilePath = outputFilePath.substr(0, lastDot) + ".ir";
+    } else {
+        outputFilePath += ".ir";
+    }
+
+    // 打开文件用于写入
+    std::ofstream outFile(outputFilePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Unable to open file " << outputFilePath << " for writing." << std::endl;
+        return;
+    }
+
+    extDefList_ir(root->children[0]);
 
     for (auto& i : tac::TAC::tac_list)
     {
         std::cout << *i << std::endl;
+        outFile << *i << std::endl;
     }
 }
 
-void inter_extDefList(Node *node)
+void extDefList_ir(Node *node)
 {
     while (node->children.size())
     {
-        inter_extDef(node->children[0]);
+        extDef_ir(node->children[0]);
         node = node->children[1];
     }
 }
@@ -32,36 +49,36 @@ void inter_extDefList(Node *node)
  *       | Specifier SEMI
  *       | Specifier FunDec CompSt
  */
-void inter_extDef(Node *node)
+void extDef_ir(Node *node)
 {
-    // printf("inter_extDef\n");
-    Attribute *type = inter_specifier(node->children[0]);
+    // printf("extDef_ir\n");
+    Attribute *type = specifier_ir(node->children[0]);
     if (node->children[1]->type == NodeType::ExtDecList)
     {
-        inter_extDecList(node->children[1], type);
+        extDecList_ir(node->children[1], type);
     }
     if (node->children[1]->type == NodeType::FunDec)
     {
-        inter_func(node->children[1], type);
-        inter_compSt(node->children[2]);
+        func_ir(node->children[1], type);
+        compSt_ir(node->children[2]);
     }
 }
 
 //ExtDecList -> VarDec
 //    | VarDec COMMA ExtDecList
 
-void inter_extDecList(Node *node, Attribute *type)
+void extDecList_ir(Node *node, Attribute *type)
 {
-    tac::TAC *tac = inter_varDec(node->children[0], type); // TODO?
+    tac::TAC *tac = varDec_ir(node->children[0], type); // TODO?
     assert(node->children.size() > 1); // no dec!!!
     // while (node->children.size() > 1)
     // {
         
     //     node = node->children[2];
-    //     tac::TAC *tac = inter_varDec(node->children[0], type);
-    //     std::cout << "inner inter_extDecList" << std::endl;
+    //     tac::TAC *tac = varDec_ir(node->children[0], type);
+    //     std::cout << "inner extDecList_ir" << std::endl;
     // }
-    std::cout << "inter_extDecList" << std::endl;
+    std::cout << "extDecList_ir" << std::endl;
     std::cout << *node << std::endl;
     tac::add_var(node->children[0], static_cast<tac::VarableAddress*>(tac));
     tac::add_tac(tac);
@@ -70,20 +87,20 @@ void inter_extDecList(Node *node, Attribute *type)
 //Specifier: TYPE
 //Specifier: StructSpecifier
 
-Attribute *inter_specifier(Node *node)
+Attribute *specifier_ir(Node *node)
 {
     Attribute *type;
     if (node->children[0]->type == NodeType::Type)
     {
-        type = inter_type(node->children[0]);
+        type = type_ir(node->children[0]);
     } else {
-        std::cout << "inter_specifier" << " other type"<< *node << std::endl;
+        std::cout << "specifier_ir" << " other type"<< *node << std::endl;
     }
     // TODO? 是否不判定使用结构和数组
     return type;
 }
 
-Attribute *inter_type(Node *node)
+Attribute *type_ir(Node *node)
 {
     return checkType(node);
 }
@@ -92,18 +109,12 @@ Attribute *inter_type(Node *node)
  * StructSpecifier: STRUCT ID LC DefList RC
  * StructSpecifier: STRUCT ID
  */
-//Attribute *inter_structSpecifier(Node *node){
-//    string name = get<string>(node->children[1]->getValue());
-//    Attribute* type = nullptr;
-//    ParamsList* param_ptr = new ParamsList("ID", new Attribute(Category::PRIMITIVE, NodeType::Int), nullptr);
-//    type = new Attribute(STRUCTURE, param_ptr);
-//    return type;
-//}
+
 
 //FunDec -> ID LP VarList RP
 //      | ID LP RP
 
-void inter_func(Node *node, Attribute *type)
+void func_ir(Node *node, Attribute *type)
 {
     std::string name = std::get<std::string>(node->children[0]->getValue());
     tac::TAC* func = new tac::Function(name);
@@ -111,39 +122,39 @@ void inter_func(Node *node, Attribute *type)
 
     if (node->children[2]->type == NodeType::VarList)
     {
-        inter_varList(node->children[2]);
+        varList_ir(node->children[2]);
     }
 }
 
 /**
  * CompSt: LC DefList StmtList RC
  */
-void inter_compSt(Node *node)
+void compSt_ir(Node *node)
 {
-    // printf("inter_compSt\n");
-    inter_defList(node->children[1]);
-    inter_stmtList(node->children[2]);
+    // printf("compSt_ir\n");
+    defList_ir(node->children[1]);
+    stmtList_ir(node->children[2]);
 }
 
 
 //  StmtList: Stmt StmtList
 
-void inter_stmtList(Node *node)
+void stmtList_ir(Node *node)
 {
     while (node->children.size())
     {
-        inter_stmt(node->children[0]);
+        stmt_ir(node->children[0]);
         node = node->children[1];
     }
 }
 
 //  DefList: Def DefList
 
-void inter_defList(Node *node)
+void defList_ir(Node *node)
 {
     while (node->children.size())
     {
-        inter_def(node->children[0]);
+        def_ir(node->children[0]);
         node = node->children[1];
     }
 }
@@ -151,23 +162,23 @@ void inter_defList(Node *node)
 /**
  * Specifier DecList SEMI
  */
-void inter_def(Node *node)
+void def_ir(Node *node)
 {
-    // printf("inter_def\n");
-    Attribute *type = inter_specifier(node->children[0]);
-    inter_decList(node->children[1], type);
+    // printf("def_ir\n");
+    Attribute *type = specifier_ir(node->children[0]);
+    decList_ir(node->children[1], type);
 }
 
 /**
  * DecList: Dec | Dec COMMA DecList
  */
-void inter_decList(Node *node, Attribute *type)
+void decList_ir(Node *node, Attribute *type)
 {
-    inter_dec(node->children[0], type);
+    dec_ir(node->children[0], type);
     while (node->children.size() > 1)
     {
         node = node->children[2];
-        inter_dec(node->children[0], type);
+        dec_ir(node->children[0], type);
     }
 }
 
@@ -182,22 +193,22 @@ void inter_decList(Node *node, Attribute *type)
  */
 std::vector<int> cont, br;
 
-void inter_stmt(Node *node)
+void stmt_ir(Node *node)
 {
     // Exp SEMI
     if (node->children[0]->type == NodeType::Exp)
     {
-        inter_exp(node->children[0]);
+        exp_ir(node->children[0]);
     }
     // CompSt
     else if (node->children[0]->type == NodeType::CompSt)
     {
-        inter_compSt(node->children[0]);
+        compSt_ir(node->children[0]);
     }
     // RETURN Exp SEMI
     else if (node->children[0]->type == NodeType::Return)
     {
-        auto exps = inter_exp(node->children[1]);
+        auto exps = exp_ir(node->children[1]);
         assert(exps->instructionType == "Variable");
         tac::TAC* tac_return = new tac::Return(static_cast<tac::VarableAddress*>(exps));
         tac::add_tac(tac_return);
@@ -206,17 +217,17 @@ void inter_stmt(Node *node)
     // 可能有问题，主要在于else if部分
     else if (node->children[0]->type == NodeType::If)
     {
-        auto expid = inter_exp(node->children[2]);
+        auto expid = exp_ir(node->children[2]);
         assert(expid->instructionType == "IF");
         
         tac::Label* tbranch = static_cast<tac::If*>(expid)->label;
         tac::add_tac(tbranch);
         tac::Goto* jbranch = nullptr;
 
-        inter_stmt(node->children[4]);
+        stmt_ir(node->children[4]);
         if (node->children.size() >= 6)
         {
-            // std::cout << "inter_stmt if else" << std::endl;
+            // std::cout << "stmt_ir if else" << std::endl;
             jbranch = new tac::Goto(new tac::Label());
             tac::add_tac(jbranch);
         }
@@ -224,10 +235,10 @@ void inter_stmt(Node *node)
         assert(fgoto->instructionType == "GOTO");
         tac::Label* fbranch = static_cast<tac::Goto*>(fgoto)->label; 
         tac::add_tac(fbranch);
-        inter_IF(static_cast<tac::If*>(expid), static_cast<tac::Goto*>(fgoto) , tbranch, fbranch);
+        IF_ir(static_cast<tac::If*>(expid), static_cast<tac::Goto*>(fgoto) , tbranch, fbranch);
         if (node->children.size() >= 6)
         {
-            inter_stmt(node->children[6]);
+            stmt_ir(node->children[6]);
             tac::Label* jbranchto = new tac::Label();
             tac::add_tac(jbranchto);
             jbranch->label = jbranchto;
@@ -243,14 +254,14 @@ void inter_stmt(Node *node)
         tac::Label* loop_start = new tac::Label();
         tac::add_tac(loop_start);
 
-        auto expid = inter_exp(node->children[2]);
+        auto expid = exp_ir(node->children[2]);
         assert(expid->instructionType == "IF");
         expid = static_cast<tac::If*>(expid);
 
         tac::Label* tbranch = new tac::Label();
         tac::add_tac(tbranch);
 
-        inter_stmt(node->children[4]);
+        stmt_ir(node->children[4]);
 
         tac::Goto* loopbranch = new tac::Goto(loop_start);
         tac::add_tac(loopbranch);
@@ -260,14 +271,14 @@ void inter_stmt(Node *node)
         assert(fgoto->instructionType == "GOTO");
         tac::Label* fbranch = static_cast<tac::Goto*>(fgoto)->label;
         tac::add_tac(fbranch);
-        inter_IF(static_cast<tac::If*>(expid), static_cast<tac::Goto *>(fgoto) , tbranch, fbranch);
-        inter_WHILE(&cont, cont_size, loop_start);
-        inter_WHILE(&br, br_size, fbranch);
+        IF_ir(static_cast<tac::If*>(expid), static_cast<tac::Goto *>(fgoto) , tbranch, fbranch);
+        WHILE_ir(&cont, cont_size, loop_start);
+        WHILE_ir(&br, br_size, fbranch);
     }
     // WRITE LP Exp RP SEMI // TODO 能不能读取read write？
     else if (node->children[0]->type == NodeType::Write)
     {
-        auto id = inter_exp(node->children[2]);
+        auto id = exp_ir(node->children[2]);
         if (id->instructionType != "Variable") {
                 std::cout << "id: " << id->instructionType << std::endl;
         }
@@ -283,16 +294,16 @@ void inter_stmt(Node *node)
  * Dec: VarDec
  * Dec: VarDec ASSIGN Exp
  */
-void inter_dec(Node *node, Attribute *type)
+void dec_ir(Node *node, Attribute *type)
 {
     tac::VarableAddress* expid = nullptr;
     if (node->children.size() > 1)
     {
-        auto exp = inter_exp(node->children[2]);
+        auto exp = exp_ir(node->children[2]);
         assert(exp->instructionType == "Variable");
         expid = static_cast<tac::VarableAddress* >(exp);
     }
-    tac::TAC *tac = inter_varDec(node->children[0], type);
+    tac::TAC *tac = varDec_ir(node->children[0], type);
     if (expid)
     {
         dynamic_cast<tac::Assign *>(tac)->right = expid;
@@ -305,7 +316,7 @@ void inter_dec(Node *node, Attribute *type)
  * VarDec: ID
  * VarDec: VarDec LB INT RB 不计划做数组
  */
-tac::TAC *inter_varDec(Node *node, Attribute *type)
+tac::TAC *varDec_ir(Node *node, Attribute *type)
 {
     tac::TAC *tac = new tac::Assign(new tac::VarableAddress(tac::VarableAddress::Type::VAR), new tac::VarableAddress(tac::VarableAddress::Type::TEMP));
     return tac;
@@ -315,11 +326,11 @@ tac::TAC *inter_varDec(Node *node, Attribute *type)
  * Args: Exp COMMA Args
  * Args: Exp
  */
-std::vector<tac::TAC *> inter_args(Node *node)
+std::vector<tac::TAC *> args_ir(Node *node)
 {
-    // printf("inter_args\n");
+    // printf("args_ir\n");
     std::vector<tac::TAC *> args_vector;
-    auto exp_varia = inter_exp(node->children[0]);
+    auto exp_varia = exp_ir(node->children[0]);
     // 原本有这个tac是否为dec？
     assert(exp_varia->instructionType == "Variable");
     tac::add_tac(new tac::AssignAddr(new tac::VarableAddress(tac::VarableAddress::Type::TEMP), static_cast<tac::VarableAddress*>(exp_varia)));
@@ -327,7 +338,7 @@ std::vector<tac::TAC *> inter_args(Node *node)
     while (node->children.size() > 1)
     {
         node = node->children[2];
-        exp_varia = inter_exp(node->children[0]);
+        exp_varia = exp_ir(node->children[0]);
         args_vector.push_back(exp_varia);
         //原本有一个 if 判断tac为 dec？
         tac::add_tac(new tac::AssignAddr(new tac::VarableAddress(tac::VarableAddress::Type::TEMP), static_cast<tac::VarableAddress*>(exp_varia)));
@@ -351,9 +362,9 @@ std::vector<tac::TAC *> inter_args(Node *node)
  *    | INT | FLOAT | CHAR
  *    | READ LP RP
  */
-tac::TAC* inter_exp(Node *node, bool single)
+tac::TAC* exp_ir(Node *node, bool single)
 {
-    // printf("inter_exp\n");
+    // printf("exp_ir\n");
     // READ LP RP // TODO
    if (node->children[0]->type == NodeType::Read)
    {
@@ -376,7 +387,7 @@ tac::TAC* inter_exp(Node *node, bool single)
     // MINUS Exp | MINUS Exp %prec UMINUS
     if (node->children[0]->type == NodeType::Minus)
     {
-        auto var = inter_exp(node->children[1]);
+        auto var = exp_ir(node->children[1]);
         auto result = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         assert(var->instructionType == "Variable");
         auto tac = new tac::Arithmetic(tac::Operator::MINUS, result, new tac::VarableAddress(0), static_cast<tac::VarableAddress*>(var));
@@ -386,7 +397,7 @@ tac::TAC* inter_exp(Node *node, bool single)
     // NOT Exp
     if (node->children[0]->type == NodeType::Not)
     {
-        tac::TAC* exp_if = inter_exp(node->children[1]);
+        tac::TAC* exp_if = exp_ir(node->children[1]);
         exp_if->swap_flag ^= 1;
         return exp_if;
     }   // 递归
@@ -398,7 +409,7 @@ tac::TAC* inter_exp(Node *node, bool single)
         std::string name = std::get<std::string>(node->children[0]->getValue());
         if (node->children[2]->type == NodeType::Args)
         {
-            auto id_vec = inter_args(node->children[2]);
+            auto id_vec = args_ir(node->children[2]);
             for (auto& id : id_vec)
             {
                 tac::add_tac(new tac::Arg(static_cast<tac::VarableAddress*>(id)));
@@ -439,12 +450,12 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Or)
     {
         std::cout << "Exp OR" << std::endl;
-        auto lexpid = inter_exp(node->children[0]);
+        auto lexpid = exp_ir(node->children[0]);
         assert(lexpid->instructionType == "IF");
         int lswap_flag = lexpid->swap_flag;
         auto labelid = new tac::Label();
         tac::add_tac(labelid);
-        auto rexpid= inter_exp(node->children[2]);
+        auto rexpid= exp_ir(node->children[2]);
         assert(rexpid->instructionType == "IF");
         int rswap_flag = rexpid->swap_flag;
         if (lswap_flag)
@@ -489,13 +500,13 @@ tac::TAC* inter_exp(Node *node, bool single)
     // Exp AND Exp
     if (node->children[1]->type == NodeType::And)
     {
-        auto lexpid = inter_exp(node->children[0]);
+        auto lexpid = exp_ir(node->children[0]);
         assert(lexpid->instructionType == "IF");
         int lswap_flag = lexpid->swap_flag;
         tac::Label * labelid = new tac::Label();
         tac::add_tac(labelid);
         
-        auto rexpid = inter_exp(node->children[2]);
+        auto rexpid = exp_ir(node->children[2]);
         assert(rexpid->instructionType == "IF");
         int rswap_flag = rexpid->swap_flag;
         if (lswap_flag)
@@ -542,8 +553,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Lt)
     {
     // printf("Exp LT\n");
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::LT, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -553,8 +564,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Le)
     {
     // printf("Exp LE\n");
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::LE, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -563,8 +574,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     }
     if (node->children[1]->type == NodeType::Gt)
     {
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::GT, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -573,8 +584,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     }
     if (node->children[1]->type == NodeType::Ge)
     {
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::GE, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -583,8 +594,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     }
     if (node->children[1]->type == NodeType::Ne)
     {
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::NE, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -593,8 +604,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     }
     if (node->children[1]->type == NodeType::Eq)
     {
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::If *iftac = new tac::If(tac::Operator::EQ, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid), new tac::Label());
         tac::add_tac(iftac);
         tac::Goto *gototac = new tac::Goto(new tac::Label());
@@ -604,8 +615,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     // Exp ASSIGN Exp
     if (node->children[1]->type == NodeType::Assign)
     {
-        auto rightid = inter_exp(node->children[2]);
-        auto leftid = inter_exp(node->children[0], true);
+        auto rightid = exp_ir(node->children[2]);
+        auto leftid = exp_ir(node->children[0], true);
         if (leftid->instructionType == "ASSIGN")
         {
             dynamic_cast<tac::Assign *>(leftid)->right = static_cast<tac::VarableAddress *>(rightid);
@@ -620,8 +631,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Plus)
     {
     // Exp PLUS
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Arithmetic *tac = new tac::Arithmetic( tac::Operator::PLUS, id, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid));
         tac::add_tac(tac);
@@ -630,8 +641,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Minus)
     {
     // printf("Exp MINUS\n");
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Arithmetic *tac = new tac::Arithmetic( tac::Operator::MINUS, id, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid));
         tac::add_tac(tac);
@@ -640,8 +651,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (node->children[1]->type == NodeType::Mul)
     {
     // printf("Exp MUL\n");
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Arithmetic *tac = new tac::Arithmetic( tac::Operator::MUL, id, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid));
         tac::add_tac(tac);
@@ -649,8 +660,8 @@ tac::TAC* inter_exp(Node *node, bool single)
     }
     if (node->children[1]->type == NodeType::Div) {
         // printf("Exp DIV\n");
-        auto lexpid = inter_exp(node->children[0]);
-        auto rexpid = inter_exp(node->children[2]);
+        auto lexpid = exp_ir(node->children[0]);
+        auto rexpid = exp_ir(node->children[2]);
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
         tac::Arithmetic *tac = new tac::Arithmetic( tac::Operator::DIV, id, static_cast<tac::VarableAddress*>(lexpid), static_cast<tac::VarableAddress*>(rexpid));
         tac::add_tac(tac);
@@ -666,7 +677,7 @@ tac::TAC* inter_exp(Node *node, bool single)
         while(!vec.empty()){
             Node *top = vec.back();
             if(top->children[0]->type == NodeType::Id){
-                id = inter_exp(top);
+                id = exp_ir(top);
                 vec.pop_back();
                 int vec_size = vec.size();
                 while(vec_size--){
@@ -693,7 +704,7 @@ tac::TAC* inter_exp(Node *node, bool single)
     if (type_to_string(node->children[0]->type).compare("LP") == 0)
     {
     // printf("Exp LP EXP RP\n");
-        return inter_exp(node->children[1]);
+        return exp_ir(node->children[1]);
     }
     return nullptr;
 }
@@ -702,9 +713,9 @@ tac::TAC* inter_exp(Node *node, bool single)
  * VarList: ParamDec COMMA VarList
  * VarList: ParamDec
  */
-void inter_varList(Node *node)
+void varList_ir(Node *node)
 {
-    // printf("inter_varList\n");
+    // printf("varList_ir\n");
     std::vector<Node *> vec = {node->children[0]};
     while (node->children.size() > 1)
     {
@@ -713,7 +724,7 @@ void inter_varList(Node *node)
     }
     while (!vec.empty())
     {
-        inter_paramDec(vec.back());
+        paramDec_ir(vec.back());
         vec.pop_back();
     }
 }
@@ -721,11 +732,11 @@ void inter_varList(Node *node)
 /**
  * ParamDec: Specifier VarDec
  */
-void inter_paramDec(Node *node)
+void paramDec_ir(Node *node)
 {
-    // printf("inter_paramDec\n");
-    Attribute *type = inter_specifier(node->children[0]);
-    tac::TAC *tac = inter_varDec(node->children[1], type);
+    // printf("paramDec_ir\n");
+    Attribute *type = specifier_ir(node->children[0]);
+    tac::TAC *tac = varDec_ir(node->children[1], type);
     if (tac->instructionType == "ASSIGN")
     {
         tac::VarableAddress * id = new tac::VarableAddress(tac::VarableAddress::Type::TEMP);
@@ -756,7 +767,7 @@ Attribute *checkType(Node *node)
 }
 
 
-void inter_IF(tac::If * iftac, tac::Goto* gototac, tac::Label* tbranch, tac::Label* fbranch)
+void IF_ir(tac::If * iftac, tac::Goto* gototac, tac::Label* tbranch, tac::Label* fbranch)
 {   
     if (iftac->swap_flag)
     {
@@ -766,7 +777,7 @@ void inter_IF(tac::If * iftac, tac::Goto* gototac, tac::Label* tbranch, tac::Lab
     gototac->label = fbranch;
 }
 
-void inter_WHILE(std::vector<int> *stat_vec, size_t end, tac::Label* target)
+void WHILE_ir(std::vector<int> *stat_vec, size_t end, tac::Label* target)
 {
     while (stat_vec->size() > end)
     {

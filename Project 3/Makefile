@@ -15,22 +15,24 @@ BISON_C = syntax.tab.c
 BISON_H = syntax.tab.h
 LEX_C = lex.yy.c
 
-OUTPUT = a
+OUTPUT = splc
+TARGET_DIR = bin
+TARGET = $(TARGET_DIR)/$(OUTPUT)
 
-all: $(OUTPUT)
+all: $(TARGET)
 
-bison: $(BISON_C) $(BISON_H)
+$(TARGET): $(BISON_C) $(LEX_C)
+	mkdir -p $(TARGET_DIR)
+	$(CXX) $(CXXFLAGS) -g -o $(TARGET) $(BISON_C) $(LEX_C) symbol.cpp type.cpp ir_generate.cpp three_address_code.cpp
 
 $(BISON_C) $(BISON_H): $(BISON_FILE)
 	$(BISON) -d $(BISON_FILE)
 
-flex: $(LEX_C)
-
 $(LEX_C): $(LEX_FILE)
 	$(FLEX) $(LEX_FILE)
 
-$(OUTPUT): $(BISON_C) $(LEX_C)
-	$(CXX) $(CXXFLAGS) -g -o $(OUTPUT) $(BISON_C) $(LEX_C) symbol.cpp type.cpp ir_generate.cpp three_address_code.cpp
+splc: $(TARGET)
 
 clean:
 	rm -f $(BISON_C) $(BISON_H) $(LEX_C) $(OUTPUT)
+	rm -rf $(TARGET_DIR)
